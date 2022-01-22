@@ -1,7 +1,6 @@
 package authentication
 
 import (
-	// "api/models"
 	"api/util"
 	"encoding/base64"
 	"fmt"
@@ -64,7 +63,6 @@ func GetAccessToken(w http.ResponseWriter, req *http.Request) {
 		if err != nil {
 			log.Fatalln(err)
 		}
-
 		w.Write(body)		
 	}
 }
