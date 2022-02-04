@@ -1,10 +1,11 @@
 package main
 
-import(
-	"api/authentication"
-	"api/user"
+import (
 	"api/artist"
+	"api/authentication"
+	"api/playlist"
 	"api/track"
+	"api/user"
 	"net/http"
 
 	"github.com/joho/godotenv"
@@ -17,5 +18,6 @@ func main() {
 	http.HandleFunc("/me", user.GetUserProfile)
 	http.HandleFunc("/me/favorite/tracks", track.GetTopTracks)
 	http.HandleFunc("/me/favorite/artists", artist.GetTopArtists)
+	http.HandleFunc("/me/playlists", playlist.GetPlaylists)
 	http.ListenAndServe(":8080", nil)
 }

@@ -16,7 +16,6 @@ func GetTopTracks(w http.ResponseWriter, r *http.Request) {
 	requestBody, _ := io.ReadAll(r.Body)
 	var data map[string]interface{}
 	var tracks []models.Track
-	var artists []models.Artist
 	var url string
 
 	if err := json.Unmarshal(requestBody, &data); err != nil {
@@ -68,20 +67,12 @@ func GetTopTracks(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, track := range data["items"].([]interface{}) {
-		id := track.(map[string]interface{})["id"].(string)
-		name := track.(map[string]interface{})["name"].(string)
-		popularity := track.(map[string]interface{})["popularity"].(float64)
-		for _, artist := range track.(map[string]interface{})["artists"].([]interface{}) {
-			id := artist.(map[string]interface{})["id"].(string)
-			a, err := util.GetArtistData(accessToken.(string), id)
-			if err != nil {
-				log.Fatalln(err)
-				http.Error(w, "can't get artist info", http.StatusInternalServerError)
-			}
-			artists = append(artists, a.(models.Artist))
+		parsedTrack, err := util.ParseTrackData(track.(map[string]interface{}), accessToken.(string))
+		if err != nil {
+			log.Fatalln(err)
+			http.Error(w, "can't parse data", http.StatusInternalServerError)
 		}
-		tracks = append(tracks, models.Track{Id: id, Name: name, Popularity: popularity, Artists: artists})
-		artists = nil
+		tracks = append(tracks, parsedTrack.(models.Track))
 	}
 
 	result, err := json.Marshal(&tracks)
