@@ -20,11 +20,10 @@ func GetPlaylists(w http.ResponseWriter, r *http.Request){
 	requestBody, _ := io.ReadAll(r.Body)
 
 	if err := json.Unmarshal(requestBody, &data); err != nil {
-		log.Fatalln(err)
+		log.Panic(err)
 	}
 	accessToken := data["access_token"]
 	limit := data["limit"]
-	log.Println(limit)
 
 	if accessToken == nil {
 		http.Error(w, "Missing Parameters", http.StatusBadRequest)
@@ -40,7 +39,7 @@ func GetPlaylists(w http.ResponseWriter, r *http.Request){
 
 	request, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		log.Fatalln(err)
+		log.Panic(err)
 	}
 	request.Header.Add("Authorization", fmt.Sprintf("Bearer %s", accessToken))
 	request.Header.Add("Content-Type", "application/json")
@@ -58,12 +57,12 @@ func GetPlaylists(w http.ResponseWriter, r *http.Request){
 
 	responseBody, err := io.ReadAll(res.Body)
 	if err != nil {
-		log.Fatalln(err)
+		log.Panic(err)
 	}
 
 	err = json.Unmarshal(responseBody, &data)
 	if err != nil {
-		log.Fatalln(err)
+		log.Panic(err)
 		http.Error(w, "can't parse data", http.StatusInternalServerError)
 	}
 
@@ -76,7 +75,7 @@ func GetPlaylists(w http.ResponseWriter, r *http.Request){
 
 		tracks, err := getPlaylistTracks(accessToken.(string), tracksHref)
 		if err != nil {
-			log.Fatalln(err)
+			log.Panic(err)
 			http.Error(w, "can't parse data", http.StatusInternalServerError)
 		}
 		log.Println(tracks)
@@ -85,7 +84,7 @@ func GetPlaylists(w http.ResponseWriter, r *http.Request){
 	}
 	result, err := json.Marshal(&playlists)
 	if err != nil {
-		log.Fatalln(err)
+		log.Panic(err)
 	}
 	w.WriteHeader(http.StatusOK)
 	w.Write(result)
@@ -100,14 +99,14 @@ func getPlaylistTracks(accessToken string, playlistHref string) ([]models.Track,
 	client := &http.Client{}
 	request, err := http.NewRequest("GET", playlistHref, nil)
 	if err != nil {
-		log.Fatalln(err)
+		log.Panic(err)
 	}
 	request.Header.Add("Authorization", fmt.Sprintf("Bearer %s", accessToken))
 	request.Header.Add("Content-Type", "application/json")
 
 	res, err := client.Do(request)
 	if err != nil {
-		log.Fatalln(err)
+		log.Panic(err)
 		return nil, err
 	}
 	log.Println(res.Status)
@@ -115,15 +114,15 @@ func getPlaylistTracks(accessToken string, playlistHref string) ([]models.Track,
 	
 	responseBody, err := io.ReadAll(res.Body)
 	if err != nil {
-		log.Fatalln(err)
+		log.Panic(err)
 	}
 
 	err = json.Unmarshal(responseBody, &data)
 	if err != nil {
-		log.Fatalln(err)
+		log.Panic(err)
 		return nil, err
 	}
-	
+
 	for _, track := range data["items"].([]interface{}) {
 		trackData := track.(map[string]interface{})["track"].(map[string]interface{})
 		ids = append(ids, trackData["id"].(string))
@@ -132,11 +131,12 @@ func getPlaylistTracks(accessToken string, playlistHref string) ([]models.Track,
 			ids = nil
 		}
 	}
+	trackIds = append(trackIds, ids)
 	tracks, err := util.GetMultipleTracks(trackIds, accessToken)
 	if err != nil{
 		return nil, err
 	}
-	fmt.Println(tracks)
+	log.Println(tracks)
 
 	return tracks.([]models.Track), nil
 }

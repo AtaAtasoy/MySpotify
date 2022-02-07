@@ -56,7 +56,6 @@ func GetTopArtists(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	fmt.Println(string(responseBody))
 
 	err = json.Unmarshal(responseBody, &data)
 	if err != nil {
@@ -64,11 +63,8 @@ func GetTopArtists(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, artist := range data["items"].([]interface{}) { 
-		id := artist.(map[string]interface{})["id"].(string)
-		name := artist.(map[string]interface{})["name"].(string)
-		popularity := artist.(map[string]interface{})["popularity"].(float64)
-
-		artists = append(artists, models.Artist{Id: id, Name: name, Popularity: popularity})
+		parsedArtist := util.ParseArtistData(artist.(map[string]interface{}))
+		artists = append(artists, parsedArtist)
 	}
 
 	result, err := json.Marshal(&artists)

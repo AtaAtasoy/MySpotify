@@ -23,7 +23,6 @@ func GetTopTracks(w http.ResponseWriter, r *http.Request) {
 	}
 	accessToken := data["access_token"]
 	limit := data["limit"]
-	log.Println(limit)
 
 	if accessToken == nil {
 		http.Error(w, "Missing Parameters", http.StatusBadRequest)
