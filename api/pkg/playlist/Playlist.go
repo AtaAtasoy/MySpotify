@@ -1,8 +1,8 @@
 package playlist
 
 import (
-	"api/models"
-	"api/util"
+	"api/pkg/track"
+	"api/internal"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -10,10 +10,15 @@ import (
 	"net/http"
 )
 
+type Playlist struct{
+	Name string `json:"name"`
+	Tracks []track.Track `json:"tracks"`
+}
+
 func GetPlaylists(w http.ResponseWriter, r *http.Request){
 	var data map[string]interface{}
 	var url string
-	var playlists []models.Playlist
+	var playlists []Playlist
 	
 	util.EnableCors(&w)
 	client := &http.Client{}
@@ -33,7 +38,7 @@ func GetPlaylists(w http.ResponseWriter, r *http.Request){
 	if limit != nil {
 		url = fmt.Sprintf("https://api.spotify.com/v1/me/playlists?limit=%s", limit)
 	} else {
-		url = "https://api.spotify.com/v1/me/playlists"
+		url = "https://api.spotify.com/v1/me//playlists"
 	}
 	log.Println(url)
 
@@ -78,8 +83,7 @@ func GetPlaylists(w http.ResponseWriter, r *http.Request){
 			log.Panic(err)
 			http.Error(w, "can't parse data", http.StatusInternalServerError)
 		}
-		log.Println(tracks)
-		playlist := models.Playlist{Name: name, Tracks: tracks}
+		playlist := Playlist{Name: name, Tracks: tracks}
 		playlists = append(playlists, playlist)
 	}
 	result, err := json.Marshal(&playlists)
@@ -87,11 +91,12 @@ func GetPlaylists(w http.ResponseWriter, r *http.Request){
 		log.Panic(err)
 	}
 	w.WriteHeader(http.StatusOK)
+	log.Println(string(result))
 	w.Write(result)
 }
 
 
-func getPlaylistTracks(accessToken string, playlistHref string) ([]models.Track, error){
+func getPlaylistTracks(accessToken string, playlistHref string) ([]track.Track, error){
 	var data map[string]interface{}
 	var trackIds [][]string
 	var ids []string 
@@ -132,11 +137,11 @@ func getPlaylistTracks(accessToken string, playlistHref string) ([]models.Track,
 		}
 	}
 	trackIds = append(trackIds, ids)
-	tracks, err := util.GetMultipleTracks(trackIds, accessToken)
+	tracks, err := track.GetMultipleTracks(trackIds, accessToken)
 	if err != nil{
 		return nil, err
 	}
-	log.Println(tracks)
+	//log.Println(tracks)
 
-	return tracks.([]models.Track), nil
+	return tracks.([]track.Track), nil
 }

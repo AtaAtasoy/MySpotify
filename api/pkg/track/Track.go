@@ -1,112 +1,112 @@
-package util
+package track
 
 import (
-	"api/models"
+	"api/internal"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
 	"log"
-	"math/rand"
 	"net/http"
 )
 
-func GenerateRandomString(n int) string {
-	letters := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
-	s := make([]rune, n)
-
-	for i := range s {
-		s[i] = letters[rand.Intn(len(letters))]
-	}
-	return string(s)
+type Track struct {
+	Id         string `json:"id"`
+	Name       string `json:"name"`
+	Popularity float64 `json:"popularity"`
+	Acousticness float64 `json:"acousticness"`
+	Danceability float64 `json:"danceability"`
+	Duration_ms float64 `json:"duration_ms"`
+	Energy float64 `json:"energy"`
+	Instrumentalness float64 `json:"instrumentalness"`
+	Liveness float64 `json:"liveness"`
+	Loudness float64 `json:"loudness"`
+	Mode float64 `json:"mode"`
+	Speechiness float64 `json:"speechiness"`
+	Tempo float64 `json:"tempo"`
+	Valence float64 `json:"valence"`
 }
 
-func EnableCors(w *http.ResponseWriter) {
-	(*w).Header().Set("Access-Control-Allow-Origin", "*")
-}
-
-func GetArtistData(accessToken string, artistIds [][]string) (interface{}, error) {
-	var data map[string]interface{}
-	var parsedArtists []models.Artist
+func GetTopTracks(w http.ResponseWriter, r *http.Request) {
+	util.EnableCors(&w)
 	client := &http.Client{}
-	for _, idList := range artistIds {
-		url := "https://api.spotify.com/v1/artists?ids="
-		for index, artistId := range idList {
-			if index == len(idList)-1 {
-				url = url + artistId
-			} else {
-				url = url + artistId + ","
-			}
-		}
-		log.Println("Request: URL", url)
-		request, err := http.NewRequest("GET", url, nil)
-		if err != nil {
-			log.Panic(err)
-		}
-		request.Header.Add("Authorization", fmt.Sprintf("Bearer %s", accessToken))
-		request.Header.Add("Content-Type", "application/json")
+	requestBody, _ := io.ReadAll(r.Body)
+	var data map[string]interface{}
+	var tracks []Track
+	var url string
 
-		res, err := client.Do(request)
-		if err != nil {
-			log.Panic(err)
-		}
-		log.Println(res.Status)
-		if res.Status != "200 OK" {
-			return nil, errors.New(res.Status)
-		}
-		defer res.Body.Close()
-
-		responseBody, err := io.ReadAll(res.Body)
-		if err != nil {
-			log.Panic(err)
-		}
-
-		err = json.Unmarshal(responseBody, &data)
-		if err != nil {
-			log.Panic(err)
-			return nil, err
-		}
-
-		for _, artist := range data["artists"].([]interface{}) {
-			parsedArtist := ParseArtistData(artist.(map[string]interface{}))
-			if err != nil {
-				log.Fatalln(err)
-				return nil, err
-			}
-			parsedArtists = append(parsedArtists, parsedArtist)
-		}
+	if err := json.Unmarshal(requestBody, &data); err != nil {
+		log.Panic(err)
 	}
-	return parsedArtists, nil
-}
+	accessToken := data["access_token"]
+	limit := data["limit"]
 
-func ParseArtistData(artist map[string]interface{}) models.Artist {
-	return models.Artist{Id: artist["id"].(string), Name: artist["name"].(string), Popularity: artist["popularity"].(float64)}
-}
+	if accessToken == nil {
+		http.Error(w, "Missing Parameters", http.StatusBadRequest)
+		return
+	}
 
-/**
-Acousticness float32
-	Danceability float32
-	Duration_ms float32
-	Energy float32
-	Instrumentalness float32
-	Liveness float32
-	Loudness float32
-	Mode float32
-	Speechiness float32
-	Tempo float32
-	Valence float32
-*/
-func ParseTrackData(track map[string]interface{}, accessToken string) (interface{}, error) {
-	id := track["id"].(string)
-	name := track["name"].(string)
-	popularity := track["popularity"].(float64)
+	if limit != nil {
+		url = fmt.Sprintf("https://api.spotify.com/v1/me/top/tracks?limit=%s", limit)
+	} else {
+		url = "https://api.spotify.com/v1/me/top/tracks"
+	}
+	log.Println(url)
 
-	return models.Track{Id: id, Name: name, Popularity: popularity}, nil
+	request, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		log.Panic(err)
+	}
+	request.Header.Add("Authorization", fmt.Sprintf("Bearer %s", accessToken))
+	request.Header.Add("Content-Type", "application/json")
+
+	res, err := client.Do(request)
+	if err != nil {
+		log.Panic(err)
+	}
+	log.Println(res.Status)
+	if res.Status != "200 OK" {
+		http.Error(w, res.Status, http.StatusBadRequest)
+		return
+	}
+	defer res.Body.Close()
+
+	responseBody, err := io.ReadAll(res.Body)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	err = json.Unmarshal(responseBody, &data)
+	if err != nil {
+		log.Panic(err)
+		http.Error(w, "can't parse data", http.StatusInternalServerError)
+	}
+
+	for _, track := range data["items"].([]interface{}) {
+		parsedTrack, err := parseTrackData(track.(map[string]interface{}), accessToken.(string))
+		if err != nil {
+			log.Panic(err)
+			http.Error(w, "can't parse data", http.StatusInternalServerError)
+		}
+		tracks = append(tracks, parsedTrack.(Track))
+	}
+	tracks, err = getAudioAnalysis(tracks, accessToken.(string))
+	if err != nil{
+		log.Panic(err)
+		http.Error(w, "can't get audio analysis", http.StatusInternalServerError)
+	}
+
+	result, err := json.Marshal(&tracks)
+	if err != nil {
+		log.Panic(err)
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write(result)
 }
 
 func GetMultipleTracks(trackIds [][]string, accessToken string) (interface{}, error) {
 	var data map[string]interface{}
-	var parsedTracks []models.Track
+	var parsedTracks []Track
 	client := &http.Client{}
 	for _, idList := range trackIds {
 		if len(idList) == 0{
@@ -150,14 +150,14 @@ func GetMultipleTracks(trackIds [][]string, accessToken string) (interface{}, er
 			return nil, err
 		}
 		for _, track := range data["tracks"].([]interface{}) {
-			parsedTrack, err := ParseTrackData(track.(map[string]interface{}), accessToken)
+			parsedTrack, err := parseTrackData(track.(map[string]interface{}), accessToken)
 			if err != nil {
 				log.Panic(err)
 				return nil, err
 			}
-			parsedTracks = append(parsedTracks, parsedTrack.(models.Track))
+			parsedTracks = append(parsedTracks, parsedTrack.(Track))
 		}
-		parsedTracks, err = GetAudioAnalysis(parsedTracks, accessToken)
+		parsedTracks, err = getAudioAnalysis(parsedTracks, accessToken)
 		if err != nil{
 			log.Panic(err)
 		}
@@ -165,7 +165,7 @@ func GetMultipleTracks(trackIds [][]string, accessToken string) (interface{}, er
 	return parsedTracks, nil
 }
 
-func GetAudioAnalysis(parsedTracks []models.Track, accessToken string) ([]models.Track, error) {
+func getAudioAnalysis(parsedTracks []Track, accessToken string) ([]Track, error) {
 	var data map[string]interface{}
 	client := &http.Client{}
 	url := "https://api.spotify.com/v1/audio-features?ids="
@@ -223,4 +223,12 @@ func GetAudioAnalysis(parsedTracks []models.Track, accessToken string) ([]models
 		}
 	}
 	return parsedTracks, nil
+}
+
+func parseTrackData(track map[string]interface{}, accessToken string) (interface{}, error) {
+	id := track["id"].(string)
+	name := track["name"].(string)
+	popularity := track["popularity"].(float64)
+
+	return Track{Id: id, Name: name, Popularity: popularity}, nil
 }

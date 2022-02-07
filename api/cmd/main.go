@@ -1,10 +1,10 @@
 package main
 
 import (
-	"api/artist"
-	"api/authentication"
-	"api/playlist"
-	"api/track"
+	"api/pkg/artist"
+	"api/pkg/authentication"
+	"api/pkg/playlist"
+	"api/pkg/track"
 	"net/http"
 
 	"github.com/joho/godotenv"

@@ -1,8 +1,7 @@
 package authentication
 
 import (
-	"api/models"
-	"api/util"
+	"api/internal"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
@@ -13,6 +12,16 @@ import (
 	"os"
 	"strings"
 )
+
+type ClientCredentials struct{
+	Access_token string `json:"access_token"`
+	Token_type string `json:"token_type"`
+	Expires_in float64 `json:"expires_in"`
+	Refresh_token string `json:"refresh_token"`
+	Id string `json:"id"`
+	Images []interface{} `json:"images"`
+	Display_name string `json:"display_name"`
+}
 
 // Requesting User Authorization
 func GetUserAuthorization(w http.ResponseWriter, req *http.Request) {
@@ -28,7 +37,7 @@ func GetUserAuthorization(w http.ResponseWriter, req *http.Request) {
 
 // Requesting Access Token
 func GetAccessToken(w http.ResponseWriter, r *http.Request) {
-	var clientCredentials models.ClientCredentials
+	var clientCredentials ClientCredentials
 	util.EnableCors(&w)
 	code := r.URL.Query().Get("code")
 	state := r.URL.Query().Get("state")
@@ -90,7 +99,7 @@ func GetAccessToken(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func completeClientCredentials(credentials *models.ClientCredentials) (models.ClientCredentials, error){
+func completeClientCredentials(credentials *ClientCredentials) (ClientCredentials, error){
 	client := &http.Client{}
 	var data map[string]interface{}
 	url := "https://api.spotify.com/v1/me"
@@ -121,9 +130,10 @@ func completeClientCredentials(credentials *models.ClientCredentials) (models.Cl
 		log.Panic(err)
 		return *credentials, err
 	}
+	fmt.Println("User profile:", data)
 
 	credentials.Display_name = data["display_name"].(string)
 	credentials.Images = data["images"].([]interface{})
-	credentials.User_id = data["id"].(string)
+	credentials.Id = data["id"].(string)
 	return *credentials, nil
 }
