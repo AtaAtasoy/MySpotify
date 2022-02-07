@@ -19,7 +19,7 @@ func GetTopTracks(w http.ResponseWriter, r *http.Request) {
 	var url string
 
 	if err := json.Unmarshal(requestBody, &data); err != nil {
-		log.Fatalln(err)
+		log.Panic(err)
 	}
 	accessToken := data["access_token"]
 	limit := data["limit"]
@@ -38,14 +38,14 @@ func GetTopTracks(w http.ResponseWriter, r *http.Request) {
 
 	request, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		log.Fatalln(err)
+		log.Panic(err)
 	}
 	request.Header.Add("Authorization", fmt.Sprintf("Bearer %s", accessToken))
 	request.Header.Add("Content-Type", "application/json")
 
 	res, err := client.Do(request)
 	if err != nil {
-		log.Fatalln(err)
+		log.Panic(err)
 	}
 	log.Println(res.Status)
 	if res.Status != "200 OK" {
@@ -56,27 +56,32 @@ func GetTopTracks(w http.ResponseWriter, r *http.Request) {
 
 	responseBody, err := io.ReadAll(res.Body)
 	if err != nil {
-		log.Fatalln(err)
+		log.Panic(err)
 	}
 
 	err = json.Unmarshal(responseBody, &data)
 	if err != nil {
-		log.Fatalln(err)
+		log.Panic(err)
 		http.Error(w, "can't parse data", http.StatusInternalServerError)
 	}
 
 	for _, track := range data["items"].([]interface{}) {
 		parsedTrack, err := util.ParseTrackData(track.(map[string]interface{}), accessToken.(string))
 		if err != nil {
-			log.Fatalln(err)
+			log.Panic(err)
 			http.Error(w, "can't parse data", http.StatusInternalServerError)
 		}
 		tracks = append(tracks, parsedTrack.(models.Track))
 	}
+	tracks, err = util.GetAudioAnalysis(tracks, accessToken.(string))
+	if err != nil{
+		log.Panic(err)
+		http.Error(w, "can't get audio analysis", http.StatusInternalServerError)
+	}
 
 	result, err := json.Marshal(&tracks)
 	if err != nil {
-		log.Fatalln(err)
+		log.Panic(err)
 	}
 	w.WriteHeader(http.StatusOK)
 	w.Write(result)

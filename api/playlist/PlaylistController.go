@@ -33,7 +33,7 @@ func GetPlaylists(w http.ResponseWriter, r *http.Request){
 	if limit != nil {
 		url = fmt.Sprintf("https://api.spotify.com/v1/me/playlists?limit=%s", limit)
 	} else {
-		url = "https://api.spotify.com/v1/me/top/playlists"
+		url = "https://api.spotify.com/v1/me/playlists"
 	}
 	log.Println(url)
 
