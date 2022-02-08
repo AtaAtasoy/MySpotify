@@ -1,8 +1,8 @@
 package playlist
 
 import (
-	"api/pkg/track"
 	"api/internal"
+	"api/pkg/track"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -10,16 +10,16 @@ import (
 	"net/http"
 )
 
-type Playlist struct{
-	Name string `json:"name"`
+type Playlist struct {
+	Name   string        `json:"name"`
 	Tracks []track.Track `json:"tracks"`
 }
 
-func GetPlaylists(w http.ResponseWriter, r *http.Request){
+func GetPlaylists(w http.ResponseWriter, r *http.Request) {
 	var data map[string]interface{}
 	var url string
 	var playlists []Playlist
-	
+
 	util.EnableCors(&w)
 	client := &http.Client{}
 	requestBody, _ := io.ReadAll(r.Body)
@@ -28,19 +28,21 @@ func GetPlaylists(w http.ResponseWriter, r *http.Request){
 		log.Panic(err)
 	}
 	accessToken := data["access_token"]
-	limit := data["limit"]
+	limit := int(data["limit"].(float64))
+	offset := int(data["offset"].(float64))
+	log.Println("LIMIT:", limit, "OFFSET:", offset)
 
 	if accessToken == nil {
 		http.Error(w, "Missing Parameters", http.StatusBadRequest)
 		return
 	}
 
-	if limit != nil {
-		url = fmt.Sprintf("https://api.spotify.com/v1/me/playlists?limit=%s", limit)
+	if limit != 0 && offset != 0{
+		url = fmt.Sprintf("https://api.spotify.com/v1/me/playlists?limit=%d&offset=%d", int(limit), int(offset))
 	} else {
-		url = "https://api.spotify.com/v1/me//playlists"
+		url = "https://api.spotify.com/v1/me/playlists"
 	}
-	log.Println(url)
+	log.Println("Request URL:", url)
 
 	request, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -70,12 +72,13 @@ func GetPlaylists(w http.ResponseWriter, r *http.Request){
 		log.Panic(err)
 		http.Error(w, "can't parse data", http.StatusInternalServerError)
 	}
+	w.Header().Add("Offset", fmt.Sprintf("%d", int(data["offset"].(float64))))
+	w.Header().Add("Limit", fmt.Sprintf("%d", int(data["limit"].(float64))))
+	w.Header().Add("Total", fmt.Sprintf("%d", int(data["total"].(float64))))
 
 	for _, p := range data["items"].([]interface{}) {
-		owner := p.(map[string]interface{})["owner"].(map[string]interface{})["id"]
-		log.Println("Owner", owner)
 		name := p.(map[string]interface{})["name"].(string)
-		tracksInfo :=  p.(map[string]interface{})["tracks"].(map[string]interface{})
+		tracksInfo := p.(map[string]interface{})["tracks"].(map[string]interface{})
 		tracksHref := tracksInfo["href"].(string)
 
 		tracks, err := getPlaylistTracks(accessToken.(string), tracksHref)
@@ -95,12 +98,11 @@ func GetPlaylists(w http.ResponseWriter, r *http.Request){
 	w.Write(result)
 }
 
-
-func getPlaylistTracks(accessToken string, playlistHref string) ([]track.Track, error){
+func getPlaylistTracks(accessToken string, playlistHref string) ([]track.Track, error) {
 	var data map[string]interface{}
 	var trackIds [][]string
-	var ids []string 
-	
+	var ids []string
+
 	client := &http.Client{}
 	request, err := http.NewRequest("GET", playlistHref, nil)
 	if err != nil {
@@ -116,7 +118,7 @@ func getPlaylistTracks(accessToken string, playlistHref string) ([]track.Track, 
 	}
 	log.Println(res.Status)
 	defer res.Body.Close()
-	
+
 	responseBody, err := io.ReadAll(res.Body)
 	if err != nil {
 		log.Panic(err)
@@ -129,19 +131,24 @@ func getPlaylistTracks(accessToken string, playlistHref string) ([]track.Track, 
 	}
 
 	for _, track := range data["items"].([]interface{}) {
-		trackData := track.(map[string]interface{})["track"].(map[string]interface{})
-		ids = append(ids, trackData["id"].(string))
-		if len(ids) == 50{
-			trackIds = append(trackIds, ids)
-			ids = nil
+		if track != nil {
+			trackData := track.(map[string]interface{})["track"]
+			if trackData != nil{
+				if trackData.(map[string]interface{})["id"] != nil{
+					ids = append(ids, trackData.(map[string]interface{})["id"].(string))
+					if len(ids) == 50 {
+						trackIds = append(trackIds, ids)
+						ids = nil
+					}
+				}
+			}
 		}
 	}
 	trackIds = append(trackIds, ids)
 	tracks, err := track.GetMultipleTracks(trackIds, accessToken)
-	if err != nil{
+	if err != nil {
 		return nil, err
 	}
-	//log.Println(tracks)
 
 	return tracks.([]track.Track), nil
 }

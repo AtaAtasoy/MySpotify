@@ -120,7 +120,7 @@ func GetMultipleTracks(trackIds [][]string, accessToken string) (interface{}, er
 				url = url + trackId + ","
 			}
 		}
-		log.Println("Request: URL", url)
+		log.Println("Request URL: ", url)
 
 		request, err := http.NewRequest("GET", url, nil)
 		if err != nil {
@@ -149,13 +149,16 @@ func GetMultipleTracks(trackIds [][]string, accessToken string) (interface{}, er
 			log.Panic(err)
 			return nil, err
 		}
+		fmt.Println("Multiple Tracks Reponse:", data)
 		for _, track := range data["tracks"].([]interface{}) {
-			parsedTrack, err := parseTrackData(track.(map[string]interface{}), accessToken)
-			if err != nil {
-				log.Panic(err)
-				return nil, err
+			if track != nil {
+				parsedTrack, err := parseTrackData(track.(map[string]interface{}), accessToken)
+				if err != nil {
+					log.Panic(err)
+					return nil, err
+				}
+				parsedTracks = append(parsedTracks, parsedTrack.(Track))
 			}
-			parsedTracks = append(parsedTracks, parsedTrack.(Track))
 		}
 		parsedTracks, err = getAudioAnalysis(parsedTracks, accessToken)
 		if err != nil{
