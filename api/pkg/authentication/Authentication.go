@@ -88,7 +88,7 @@ func GetAccessToken(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "can't parse spotify authentication data", http.StatusInternalServerError)
 			return
 		}
-		completeClientCredentials(&clientCredentials)
+		clientCredentials.completeClientCredentials()
 		result, err := json.Marshal(clientCredentials)
 		if err != nil{
 			log.Panic(err)
@@ -99,7 +99,7 @@ func GetAccessToken(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func completeClientCredentials(credentials *ClientCredentials) (ClientCredentials, error){
+func (c *ClientCredentials) completeClientCredentials() (error){
 	client := &http.Client{}
 	var data map[string]interface{}
 	url := "https://api.spotify.com/v1/me"
@@ -108,13 +108,13 @@ func completeClientCredentials(credentials *ClientCredentials) (ClientCredential
 	if err != nil {
 		log.Panic(err)
 	}
-	request.Header.Add("Authorization", fmt.Sprintf("Bearer %s", credentials.Access_token))
+	request.Header.Add("Authorization", fmt.Sprintf("Bearer %s", c.Access_token))
 	request.Header.Add("Content-Type", "application/json")
 
 	res, err := client.Do(request)
 	if err != nil {
 		log.Panic(err)
-		return *credentials, err
+		return err
 	}
 	log.Println(res.Status)
 	defer res.Body.Close()
@@ -122,18 +122,18 @@ func completeClientCredentials(credentials *ClientCredentials) (ClientCredential
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
 		log.Panic(err)
-		return *credentials, err
+		return err
 	}
 
 	err = json.Unmarshal(body, &data)
 	if err != nil{
 		log.Panic(err)
-		return *credentials, err
+		return err
 	}
 	fmt.Println("User profile:", data)
 
-	credentials.Display_name = data["display_name"].(string)
-	credentials.Images = data["images"].([]interface{})
-	credentials.Id = data["id"].(string)
-	return *credentials, nil
+	c.Display_name = data["display_name"].(string)
+	c.Images = data["images"].([]interface{})
+	c.Id = data["id"].(string)
+	return nil
 }

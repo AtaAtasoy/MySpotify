@@ -211,17 +211,7 @@ func getAudioAnalysis(parsedTracks []Track, accessToken string) ([]Track, error)
 	for _, feature := range data["audio_features"].([]interface{}) {
 		for i := range parsedTracks {
 			if parsedTracks[i].Id == feature.(map[string]interface{})["id"].(string) {
-				parsedTracks[i].Acousticness = feature.(map[string]interface{})["acousticness"].(float64)
-				parsedTracks[i].Danceability = feature.(map[string]interface{})["danceability"].(float64)
-				parsedTracks[i].Duration_ms = feature.(map[string]interface{})["duration_ms"].(float64)
-				parsedTracks[i].Energy = feature.(map[string]interface{})["energy"].(float64)
-				parsedTracks[i].Instrumentalness = feature.(map[string]interface{})["instrumentalness"].(float64)
-				parsedTracks[i].Liveness = feature.(map[string]interface{})["liveness"].(float64)
-				parsedTracks[i].Loudness = feature.(map[string]interface{})["loudness"].(float64)
-				parsedTracks[i].Mode = feature.(map[string]interface{})["mode"].(float64)
-				parsedTracks[i].Speechiness = feature.(map[string]interface{})["speechiness"].(float64)
-				parsedTracks[i].Tempo = feature.(map[string]interface{})["tempo"].(float64)
-				parsedTracks[i].Valence = feature.(map[string]interface{})["valence"].(float64)
+				parsedTracks[i].setAudioFeatures(feature.(map[string]interface{}))
 			}
 		}
 	}
@@ -234,4 +224,18 @@ func parseTrackData(track map[string]interface{}, accessToken string) (interface
 	popularity := track["popularity"].(float64)
 
 	return Track{Id: id, Name: name, Popularity: popularity}, nil
+}
+
+func (t *Track) setAudioFeatures(features map[string]interface{}) {
+	t.Acousticness = features["acousticness"].(float64)
+	t.Danceability = features["danceability"].(float64)
+	t.Duration_ms = features["duration_ms"].(float64)
+	t.Energy = features["energy"].(float64)
+	t.Instrumentalness = features["instrumentalness"].(float64)
+	t.Liveness = features["liveness"].(float64)
+	t.Loudness = features["loudness"].(float64)
+	t.Mode = features["mode"].(float64)
+	t.Speechiness = features["speechiness"].(float64)
+	t.Tempo = features["tempo"].(float64)
+	t.Valence = features["valence"].(float64)
 }
