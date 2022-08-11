@@ -75,7 +75,7 @@ p {
 
 .signed-in-header {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
 }
 
 #sign-out-button {
