@@ -9,7 +9,6 @@ export default function LoginButton() {
       <>
         <Image src={session.user.image} width={200} height={200} alt={"user-profile-picture"}/>
         Signed in as {session.user.email}<br />
-        With token {session.accessToken} <br />
         <button onClick={() => signOut()}>Sign out</button>
       </>
     )
