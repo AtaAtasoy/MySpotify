@@ -1,6 +1,6 @@
 import { useSession, signIn, signOut } from "next-auth/react"
-import ProfileInformation from "./profileInformation"
-import PlaylistInfromation from "./playlistInformation"
+import Playlists from "./Playlists"
+import UserProfile from "./UserProfile"
 
 export default function Homepage() {
     const { data: session } = useSession()
@@ -9,10 +9,10 @@ export default function Homepage() {
         return (
             <div className="signed-in-home">
                 <div className="signed-in-header">
-                    <ProfileInformation />
+                    <UserProfile />
                     <button onClick={() => signOut('spotify')}>Sign out</button>
                 </div>
-                <PlaylistInfromation />
+                <Playlists />
             </div>
         )
     } 

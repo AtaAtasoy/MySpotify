@@ -1,7 +1,7 @@
 import { useSession } from "next-auth/react"
 import Image from "next/image"
 
-export default function ProfileInformation (){
+export default function UserProfile (){
     const { data: session } = useSession()
     return(
         <div className="profile-information">
