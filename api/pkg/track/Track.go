@@ -104,6 +104,7 @@ func GetTopTracks(w http.ResponseWriter, r *http.Request) {
 	w.Write(result)
 }
 
+//TODO: Fetch track info concurrently for each list of track ids.
 func GetMultipleTracks(trackIds [][]string, accessToken string) (interface{}, error) {
 	var data map[string]interface{}
 	var parsedTracks []Track

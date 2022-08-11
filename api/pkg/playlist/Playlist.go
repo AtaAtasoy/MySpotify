@@ -19,25 +19,33 @@ func GetPlaylists(w http.ResponseWriter, r *http.Request) {
 	var data map[string]interface{}
 	var url string
 	var playlists []Playlist
+	limit := 0
+	offset := 0
 
 	util.EnableCors(&w)
 	client := &http.Client{}
+	accessToken := r.Header.Get("Authorization")
 	requestBody, _ := io.ReadAll(r.Body)
 
 	if err := json.Unmarshal(requestBody, &data); err != nil {
 		log.Panic(err)
 	}
-	accessToken := data["access_token"]
-	limit := int(data["limit"].(float64))
-	offset := int(data["offset"].(float64))
+
+	if data["limit"] != nil{
+		limit = int(data["limit"].(float64))
+	} 
+	if data["offset"] != nil{
+		offset = int(data["limit"].(float64))
+	}
+
 	log.Println("LIMIT:", limit, "OFFSET:", offset)
 
-	if accessToken == nil {
+	if accessToken == "" {
 		http.Error(w, "Missing Parameters", http.StatusBadRequest)
 		return
 	}
 
-	if limit != 0 && offset != 0{
+	if limit != 0 || offset != 0 {
 		url = fmt.Sprintf("https://api.spotify.com/v1/me/playlists?limit=%d&offset=%d", int(limit), int(offset))
 	} else {
 		url = "https://api.spotify.com/v1/me/playlists"
@@ -80,14 +88,15 @@ func GetPlaylists(w http.ResponseWriter, r *http.Request) {
 		name := p.(map[string]interface{})["name"].(string)
 		tracksInfo := p.(map[string]interface{})["tracks"].(map[string]interface{})
 		tracksHref := tracksInfo["href"].(string)
-
-		tracks, err := getPlaylistTracks(accessToken.(string), tracksHref)
+		
+		tracks, err := getPlaylistTracks(accessToken, tracksHref)
 		if err != nil {
 			log.Panic(err)
 			http.Error(w, "can't parse data", http.StatusInternalServerError)
 		}
 		playlist := Playlist{Name: name, Tracks: tracks}
 		playlists = append(playlists, playlist)
+		
 	}
 	result, err := json.Marshal(&playlists)
 	if err != nil {
