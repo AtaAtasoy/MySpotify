@@ -94,8 +94,16 @@ p {
   border-radius: 50%;
 }
 
-.playlist-information {
-  background-color: #111;
-  width: 500px;
-  height: 500px;
+.favorite-artists-container{
+  width: auto;
+  height: max-content;
+  margin-bottom: 5px;
+  text-align: center;
+
+}
+
+.playlists-container {
+  width: auto;
+  height: max-content;
+  text-align: center;
 }

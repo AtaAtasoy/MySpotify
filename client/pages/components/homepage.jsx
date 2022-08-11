@@ -1,4 +1,5 @@
 import { useSession, signIn, signOut } from "next-auth/react"
+import FavoriteArtists from "./FavoriteArtists"
 import Playlists from "./Playlists"
 import UserProfile from "./UserProfile"
 
@@ -12,6 +13,7 @@ export default function Homepage() {
                     <UserProfile />
                     <button onClick={() => signOut('spotify')}>Sign out</button>
                 </div>
+                <FavoriteArtists />
                 <Playlists />
             </div>
         )
