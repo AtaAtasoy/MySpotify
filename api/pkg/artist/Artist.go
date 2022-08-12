@@ -1,7 +1,6 @@
 package artist
 
 import (
-	"api/internal"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -17,7 +16,6 @@ type Artist struct {
 }
 
 func GetTopArtists(w http.ResponseWriter, r *http.Request) {
-	util.EnableCors(&w)
 	client := &http.Client{}
 	var data map[string]interface{}
 	var artists []Artist
@@ -27,9 +25,12 @@ func GetTopArtists(w http.ResponseWriter, r *http.Request) {
 	limit := query["limit"]
 	
 	accessToken := r.Header.Get("Authorization")
+	log.Print(r.Header)
+	log.Print("Received token:", accessToken)
+	log.Print("Received limit:", limit)
 
 	if limit != nil {
-		url = fmt.Sprintf("https://api.spotify.com/v1/me/top/artists?limit=%s",limit)
+		url = fmt.Sprintf("https://api.spotify.com/v1/me/top/artists?limit=%s",limit[0])
 	} else {
 		url = "https://api.spotify.com/v1/me/top/artists"
 	}

@@ -1,7 +1,6 @@
 package playlist
 
 import (
-	"api/internal"
 	"api/pkg/track"
 	"encoding/json"
 	"fmt"
@@ -22,7 +21,6 @@ func GetPlaylists(w http.ResponseWriter, r *http.Request) {
 	limit := 0
 	offset := 0
 
-	util.EnableCors(&w)
 	client := &http.Client{}
 	accessToken := r.Header.Get("Authorization")
 	requestBody, _ := io.ReadAll(r.Body)

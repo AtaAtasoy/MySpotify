@@ -16,5 +16,6 @@ func GenerateRandomString(n int) string {
 }
 
 func EnableCors(w *http.ResponseWriter) {
-	(*w).Header().Set("Access-Control-Allow-Origin", "GET")
+	
+	(*w).Header().Set("Access-Control-Allow-Origin", "GET, OPTIONS")
 }

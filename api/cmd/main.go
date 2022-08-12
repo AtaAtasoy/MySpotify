@@ -7,15 +7,21 @@ import (
 	"api/pkg/track"
 	"net/http"
 
+	"github.com/gorilla/mux"
+	"github.com/gorilla/handlers"
 	"github.com/joho/godotenv"
 )
 
 func main() {
 	godotenv.Load(".env")
-	http.HandleFunc("/", authentication.GetUserAuthorization)
-	http.HandleFunc("/callback", authentication.GetAccessToken)
-	http.HandleFunc("/me/favorite/tracks", track.GetTopTracks)
-	http.HandleFunc("/me/favorite/artists", artist.GetTopArtists)
-	http.HandleFunc("/me/playlists", playlist.GetPlaylists)
-	http.ListenAndServe(":8080", nil)
+
+	router := mux.NewRouter()
+	
+	router.HandleFunc("/", authentication.GetUserAuthorization)
+	router.HandleFunc("/callback", authentication.GetAccessToken)
+	router.HandleFunc("/me/favorite/tracks", track.GetTopTracks)
+	router.HandleFunc("/me/favorite/artists", artist.GetTopArtists)
+	router.HandleFunc("/me/playlists", playlist.GetPlaylists)
+
+	http.ListenAndServe(":8080", handlers.CORS()(router))
 }

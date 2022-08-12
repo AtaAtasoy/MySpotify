@@ -1,7 +1,6 @@
 package track
 
 import (
-	"api/internal"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -28,7 +27,6 @@ type Track struct {
 }
 
 func GetTopTracks(w http.ResponseWriter, r *http.Request) {
-	util.EnableCors(&w)
 	client := &http.Client{}
 	requestBody, _ := io.ReadAll(r.Body)
 	var data map[string]interface{}

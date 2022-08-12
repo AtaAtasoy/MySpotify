@@ -25,7 +25,6 @@ type ClientCredentials struct{
 
 // Requesting User Authorization
 func GetUserAuthorization(w http.ResponseWriter, req *http.Request) {
-	util.EnableCors(&w)
 	client_id := os.Getenv("CLIENT_ID")
 	redirect_uri := os.Getenv("REDIRECT_URI")
 	scope := os.Getenv("SCOPE")
@@ -38,7 +37,6 @@ func GetUserAuthorization(w http.ResponseWriter, req *http.Request) {
 // Requesting Access Token
 func GetAccessToken(w http.ResponseWriter, r *http.Request) {
 	var clientCredentials ClientCredentials
-	util.EnableCors(&w)
 	code := r.URL.Query().Get("code")
 	state := r.URL.Query().Get("state")
 
