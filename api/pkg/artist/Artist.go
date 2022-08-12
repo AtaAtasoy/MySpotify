@@ -19,21 +19,14 @@ type Artist struct {
 func GetTopArtists(w http.ResponseWriter, r *http.Request) {
 	util.EnableCors(&w)
 	client := &http.Client{}
-	requestBody, _ := io.ReadAll(r.Body)
 	var data map[string]interface{}
 	var artists []Artist
 	var url string
 
-	if err := json.Unmarshal(requestBody, &data); err != nil {
-		log.Fatalln(err)
-	}
-	accessToken := data["access_token"]
-	limit := data["limit"]
-
-	if accessToken == nil {
-		http.Error(w, "Missing Parameters", http.StatusBadRequest)
-		return
-	}
+	query := r.URL.Query()
+	limit := query["limit"]
+	
+	accessToken := r.Header.Get("Authorization")
 
 	if limit != nil {
 		url = fmt.Sprintf("https://api.spotify.com/v1/me/top/artists?limit=%s",limit)
