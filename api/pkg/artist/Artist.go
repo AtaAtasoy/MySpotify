@@ -1,6 +1,7 @@
 package artist
 
 import (
+	util "api/internal"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -16,6 +17,7 @@ type Artist struct {
 }
 
 func GetTopArtists(w http.ResponseWriter, r *http.Request) {
+	util.EnableCors(&w, r)
 	client := &http.Client{}
 	var data map[string]interface{}
 	var artists []Artist
