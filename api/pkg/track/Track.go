@@ -27,6 +27,8 @@ type Track struct {
 }
 
 func GetTopTracks(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
 	client := &http.Client{}
 	requestBody, _ := io.ReadAll(r.Body)
 	var data map[string]interface{}
@@ -98,7 +100,6 @@ func GetTopTracks(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Panic(err)
 	}
-	w.WriteHeader(http.StatusOK)
 	w.Write(result)
 }
 

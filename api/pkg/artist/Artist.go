@@ -1,7 +1,6 @@
 package artist
 
 import (
-	util "api/internal"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -11,13 +10,14 @@ import (
 )
 
 type Artist struct {
-	Id         string `json:"id"`
-	Name       string `json:"name"`
+	Id         string  `json:"id"`
+	Name       string  `json:"name"`
 	Popularity float64 `json:"popularity"`
 }
 
 func GetTopArtists(w http.ResponseWriter, r *http.Request) {
-	util.EnableCors(&w, r)
+	w.Header().Set("Content-Type", "application/json")
+
 	client := &http.Client{}
 	var data map[string]interface{}
 	var artists []Artist
@@ -25,18 +25,17 @@ func GetTopArtists(w http.ResponseWriter, r *http.Request) {
 
 	query := r.URL.Query()
 	limit := query["limit"]
-	
+
 	accessToken := r.Header.Get("Authorization")
-	log.Print(r.Header)
 	log.Print("Received token:", accessToken)
 	log.Print("Received limit:", limit)
 
 	if limit != nil {
-		url = fmt.Sprintf("https://api.spotify.com/v1/me/top/artists?limit=%s",limit[0])
+		url = fmt.Sprintf("https://api.spotify.com/v1/me/top/artists?limit=%s", limit[0])
 	} else {
 		url = "https://api.spotify.com/v1/me/top/artists"
 	}
-	
+
 	request, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		log.Fatalln(err)
@@ -51,7 +50,6 @@ func GetTopArtists(w http.ResponseWriter, r *http.Request) {
 	log.Println(res.Status)
 	if res.Status != "200 OK" {
 		http.Error(w, res.Status, http.StatusBadRequest)
-		return
 	}
 	defer res.Body.Close()
 
@@ -65,7 +63,7 @@ func GetTopArtists(w http.ResponseWriter, r *http.Request) {
 		log.Fatalln(err)
 	}
 
-	for _, artist := range data["items"].([]interface{}) { 
+	for _, artist := range data["items"].([]interface{}) {
 		parsedArtist := ParseArtistData(artist.(map[string]interface{}))
 		artists = append(artists, parsedArtist)
 	}
@@ -74,7 +72,6 @@ func GetTopArtists(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	w.WriteHeader(http.StatusOK)
 	w.Write(result)
 }
 

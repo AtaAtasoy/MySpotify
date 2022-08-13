@@ -15,6 +15,8 @@ type Playlist struct {
 }
 
 func GetPlaylists(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
 	var data map[string]interface{}
 	var url string
 	var playlists []Playlist
@@ -100,7 +102,6 @@ func GetPlaylists(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Panic(err)
 	}
-	w.WriteHeader(http.StatusOK)
 	log.Println(string(result))
 	w.Write(result)
 }

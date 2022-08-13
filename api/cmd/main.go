@@ -16,10 +16,10 @@ func main() {
 	godotenv.Load(".env")
 
 	router := mux.NewRouter()
-
-	router.HandleFunc("/me/favorite/tracks", track.GetTopTracks)
-	router.HandleFunc("/me/favorite/artists", artist.GetTopArtists)
-	router.HandleFunc("/me/playlists", playlist.GetPlaylists)
+	
+	router.HandleFunc("/tracks", track.GetTopTracks)
+	router.HandleFunc("/artists", artist.GetTopArtists)
+	router.HandleFunc("/playlists", playlist.GetPlaylists)
 
 	handler := cors.Default().Handler(router)
 
