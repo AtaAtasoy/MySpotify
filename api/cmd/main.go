@@ -21,7 +21,8 @@ func main() {
 	router.HandleFunc("/artists", artist.GetTopArtists)
 	router.HandleFunc("/playlists", playlist.GetPlaylists)
 
-	handler := cors.Default().Handler(router)
+	//TODO:Setup CORS access origin
+	handler := cors.AllowAll().Handler(router)
 
 	log.Fatal(http.ListenAndServe(":8080", handler))
 }

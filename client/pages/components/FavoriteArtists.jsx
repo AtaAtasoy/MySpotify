@@ -2,20 +2,21 @@ import { useSession } from "next-auth/react"
 
 export default function FavoriteArtists(){
     const { data: session} = useSession()
-    const BACKEND_URI = process.env.backendUrl + 'me/favorite/artists?limit=3'
+    const url = process.env.backendUrl + '/artists?limit=3'
 
     if (session){
         const options = {
-            headers: {
+            method: "GET",
+            headers: new Headers({
                 'Authorization': session.accessToken
-            }
+            })
         }
         
         //TODO:Implement the request
         const getFavoriteArtists = () => {
-            console.log(options)
-            fetch(BACKEND_URI, options)
-            .then(result => console.log(result))
+            fetch(url, options)
+            .then(response => response.json())
+            .then(jsondata => console.log(jsondata))
             .catch(err => console.error(err))
         }
 
@@ -24,6 +25,5 @@ export default function FavoriteArtists(){
                 <button onClick={() => getFavoriteArtists()}>Display Favorite Artists</button>
             </div>
         )
-
     } 
 }

@@ -4,6 +4,9 @@ const nextConfig = {
   swcMinify: true,
   images: {
     domains: ["i.scdn.co"]
+  },
+  env:{
+    backendUrl: process.env.BACKEND_URL
   }
 }
 
