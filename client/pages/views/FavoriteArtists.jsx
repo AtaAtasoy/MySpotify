@@ -25,6 +25,7 @@ export default function FavoriteArtists(){
             .then(jsondata => {
                 console.log(jsondata)
                 setArtists(jsondata)
+
                 setFetching(false)
             })
             .catch(err => console.error(err))
@@ -33,7 +34,7 @@ export default function FavoriteArtists(){
         return(
             <div className="favorite-artists-container">
                 <button onClick={() => getFavoriteArtists()}>Display Favorite Artists</button>
-                {artists.length > 0 ? <CircleLoader /> : artists.map((artistData, i) => <Artist key={i} name={artistData.name} popularity={artistData.popularity}/>)}
+                {fetching ? <CircleLoader /> : artists.map((artistData, i) => <Artist key={i} name={artistData.name} popularity={artistData.popularity}/>)}
             </div>
         )
     } 
