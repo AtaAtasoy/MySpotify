@@ -7,6 +7,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"strings"
 )
 
 type Playlist struct {
@@ -16,37 +17,32 @@ type Playlist struct {
 
 func GetPlaylists(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-
+	
 	var data map[string]interface{}
 	var url string
 	var playlists []Playlist
-	limit := 0
-	offset := 0
-
 	client := &http.Client{}
+	
 	accessToken := r.Header.Get("Authorization")
-	requestBody, _ := io.ReadAll(r.Body)
+	query := r.URL.Query()
+	limit := strings.Join(query["limit"], "")
+	offset := strings.Join(query["offset"], "")
 
-	if err := json.Unmarshal(requestBody, &data); err != nil {
-		log.Panic(err)
-	}
-
-	if data["limit"] != nil{
-		limit = int(data["limit"].(float64))
-	} 
-	if data["offset"] != nil{
-		offset = int(data["limit"].(float64))
-	}
-
-	log.Println("LIMIT:", limit, "OFFSET:", offset)
-
+	log.Print("Received token:", accessToken)
+	log.Print("Received limit:", limit)
+	log.Print("Received offset:", offset)
+	
 	if accessToken == "" {
-		http.Error(w, "Missing Parameters", http.StatusBadRequest)
+		http.Error(w, "Missing Parameters: Authorization", http.StatusBadRequest)
 		return
 	}
 
-	if limit != 0 || offset != 0 {
-		url = fmt.Sprintf("https://api.spotify.com/v1/me/playlists?limit=%d&offset=%d", int(limit), int(offset))
+	if limit != "" && offset != "" {
+		url = fmt.Sprintf("https://api.spotify.com/v1/me/playlists?limit=%s&offset=%s", limit, offset)
+	} else if offset != "" {
+		url = fmt.Sprintf("https://api.spotify.com/v1/me/playlists?offset=%s", offset)
+	} else if limit != "" {
+		url = fmt.Sprintf("https://api.spotify.com/v1/me/playlists?limit=%s", limit)
 	} else {
 		url = "https://api.spotify.com/v1/me/playlists"
 	}
