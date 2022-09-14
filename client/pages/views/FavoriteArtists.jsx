@@ -21,20 +21,15 @@ export default function FavoriteArtists(){
         const getFavoriteArtists = () => {
             setFetching(true)
             fetch(url, options)
-            .then(response => response.json())
-            .then(jsondata => {
-                console.log(jsondata)
-                setArtists(jsondata)
-
-                setFetching(false)
-            })
+            .then(response => response.json().then(json => setArtists(json)))
+            .finally(() => setFetching(false))
             .catch(err => console.error(err))
         }
 
         return(
             <div className="favorite-artists-container">
                 <button onClick={() => getFavoriteArtists()}>Display Favorite Artists</button>
-                {fetching ? <CircleLoader /> : artists.map((artistData, i) => <Artist key={i} name={artistData.name} popularity={artistData.popularity}/>)}
+                {fetching ? <CircleLoader /> : artists.map((artistData, i) => <Artist key={i} name={artistData.name} popularity={artistData.popularity} image={artistData.images[2]}/>)}
             </div>
         )
     } 

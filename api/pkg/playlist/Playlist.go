@@ -11,8 +11,10 @@ import (
 )
 
 type Playlist struct {
+	Id string `json:"id"`
 	Name   string        `json:"name"`
 	Tracks []track.Track `json:"tracks"`
+	Images []interface{} `json:"images"`
 }
 
 func GetPlaylists(w http.ResponseWriter, r *http.Request) {
@@ -81,7 +83,9 @@ func GetPlaylists(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Total", fmt.Sprintf("%d", int(data["total"].(float64))))
 
 	for _, p := range data["items"].([]interface{}) {
+		id :=  p.(map[string]interface{})["id"].(string)
 		name := p.(map[string]interface{})["name"].(string)
+		images := p.(map[string]interface{})["images"].([]interface{})
 		tracksInfo := p.(map[string]interface{})["tracks"].(map[string]interface{})
 		tracksHref := tracksInfo["href"].(string)
 		
@@ -90,7 +94,7 @@ func GetPlaylists(w http.ResponseWriter, r *http.Request) {
 			log.Panic(err)
 			http.Error(w, "can't parse data", http.StatusInternalServerError)
 		}
-		playlist := Playlist{Name: name, Tracks: tracks}
+		playlist := Playlist{Id: id, Name: name, Tracks: tracks, Images: images}
 		playlists = append(playlists, playlist)
 		
 	}
