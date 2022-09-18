@@ -5,7 +5,7 @@ import CircleLoader from "./components/CircleLoader"
 
 export default function FavoriteArtists(){
     const { data: session} = useSession()
-    const url = process.env.backendUrl + '/artists?limit=3'
+    const url = process.env.backendUrl + '/artists?limit=5'
     const [artists, setArtists] = useState([])
     const [fetching, setFetching] = useState(false)
 
@@ -17,8 +17,8 @@ export default function FavoriteArtists(){
             })
         }
         
-        //TODO:Implement the request
         const getFavoriteArtists = () => {
+            artists.length = 0
             setFetching(true)
             fetch(url, options)
             .then(response => response.json().then(json => setArtists(json)))
@@ -29,7 +29,7 @@ export default function FavoriteArtists(){
         return(
             <div className="favorite-artists-container">
                 <button onClick={() => getFavoriteArtists()}>Display Favorite Artists</button>
-                {fetching ? <CircleLoader /> : artists.map((artistData, i) => { if (artistData =! null) return <Artist key={i} name={artistData.name} popularity={artistData.popularity} image={artistData.images[2]}/> })}
+                {fetching ? <CircleLoader /> : artists.map((artistData, i) => <Artist key={i} name={artistData.name} popularity={artistData.popularity} image={artistData.images[2]}/>)}
             </div>
         )
     } 

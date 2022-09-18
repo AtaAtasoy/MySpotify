@@ -14,12 +14,13 @@ export default function Playlists() {
             method: "GET",
             headers: new Headers({
                 'Authorization': session.accessToken,
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Username': session.userId
             }),
         }
 
-        //TODO:Implement the request
         const getUserPlaylists = () => {
+            playlists.length = 0
             setFetching(true)
             fetch(url, options)
                 .then(response => {

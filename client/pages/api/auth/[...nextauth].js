@@ -12,15 +12,17 @@ export default NextAuth({
     // ...add more providers here
   ],
   callbacks: {
-    async jwt({token, account}) {
-      if (account) {
+    async jwt({token, account, user}) {
+      if (account && user) {
         token.accessToken = account.access_token
+        token.uid = user.id
       }
       return token
       },
     async session({ session, token }) {
         // Send properties to the client, like an access_token from a provider.
         session.accessToken = token.accessToken
+        session.userId = token.uid
         return session
       }
   }
