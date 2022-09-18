@@ -97,9 +97,9 @@ p {
 .favorite-artists-container{
   width: auto;
   height: max-content;
-  margin-bottom: 5px;
+  margin-bottom: 20px;
+  border-top: 20px;
   text-align: center;
-
 }
 
 .playlists-container {
