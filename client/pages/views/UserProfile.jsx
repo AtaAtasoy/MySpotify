@@ -1,5 +1,5 @@
 import { useSession } from "next-auth/react"
-import Image from "next/image"
+import Image from "next/future/image"
 
 export default function UserProfile (){
     const { data: session } = useSession()

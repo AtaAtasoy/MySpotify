@@ -19,17 +19,19 @@
  import React from 'react'
  
  export default function Track(props){
-    return(
-        <div className='playlist-tracks'>
-            <label>{props.name}</label>
-            <label>{props.popularity}</label>
-            <label>{props.acousticness}</label>
-            <label>{props.danceability}</label>
-            <label>{props.duration_ms}</label>
-            <label>{props.energy}</label>
-            <label>{props.instrumentalness}</label>
-            <label>{props.liveness}</label>
-            <label>{props.tempo}</label>
-        </div>
-    )
+    if (props) {
+        return(
+            <div className='playlist-tracks'>
+                <label>{props.name}</label>
+                <label>{props.popularity}</label>
+                <label>{props.acousticness}</label>
+                <label>{props.danceability}</label>
+                <label>{props.duration_ms}</label>
+                <label>{props.energy}</label>
+                <label>{props.instrumentalness}</label>
+                <label>{props.liveness}</label>
+                <label>{props.tempo}</label>
+            </div>
+        )
+    }
  }
