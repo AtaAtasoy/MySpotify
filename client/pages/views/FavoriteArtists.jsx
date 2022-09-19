@@ -27,9 +27,11 @@ export default function FavoriteArtists(){
         }
 
         return(
-            <div className="favorite-artists-container">
+            <div className="favorite-artists-parent-container">
                 <button onClick={() => getFavoriteArtists()}>Display Favorite Artists</button>
-                {fetching ? <CircleLoader /> : artists.map((artistData, i) => <Artist key={i} name={artistData.name} popularity={artistData.popularity} image={artistData.images[2]}/>)}
+                <div className="favorite-artists-child-container"> 
+                    {fetching ? <CircleLoader /> : artists.map((artistData, i) => <Artist key={i} name={artistData.name} popularity={artistData.popularity} image={artistData.images[artistData.images.length - 1]}/>)}
+                </div>
             </div>
         )
     } 

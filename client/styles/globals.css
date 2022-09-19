@@ -94,16 +94,28 @@ p {
   border-radius: 50%;
 }
 
-.favorite-artists-container{
+.favorite-artists-parent-container{
   width: auto;
   height: max-content;
-  margin-bottom: 20px;
-  border-top: 20px;
   text-align: center;
 }
 
-.playlists-container {
+.favorite-artists-child-container {
+  columns: 5 auto;
+  display: inline-flexbox;
+}
+
+.playlists-parent-container {
   width: auto;
   height: max-content;
   text-align: center;
+  margin-top: 30px;
+}
+
+.playlists-child-container {
+  width: auto;
+}
+
+.playlists-table {
+  width: 100%;
 }
