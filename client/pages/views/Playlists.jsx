@@ -14,9 +14,9 @@ export default function Playlists() {
         for (let i = 0; i < playlists.length - 2; i = i + 3){
             rows.push(
                 <tr>
-                    <td><Playlist name={playlists[i].name} tracks={playlists[i].tracks} image={playlists[i].images[0]} /></td>
-                    <td><Playlist name={playlists[i + 1].name} tracks={playlists[i + 1].tracks} image={playlists[i + 1].images[0]} /></td>
-                    <td><Playlist name={playlists[i + 2].name} tracks={playlists[i + 2].tracks} image={playlists[i + 2].images[0]} /></td>
+                    <td><Playlist key={i} name={playlists[i].name} tracks={playlists[i].tracks} image={playlists[i].images[0]} /></td>
+                    <td><Playlist key={i + 1} name={playlists[i + 1].name} tracks={playlists[i + 1].tracks} image={playlists[i + 1].images[0]} /></td>
+                    <td><Playlist key={i + 2} name={playlists[i + 2].name} tracks={playlists[i + 2].tracks} image={playlists[i + 2].images[0]} /></td>
                 </tr>
             )
         }
@@ -53,7 +53,9 @@ export default function Playlists() {
                 <div className="playlists-child-container">
                     {fetching ? <CircleLoader /> : 
                         <table className="playlists-table">
-                           {renderTableRows()}
+                            <tbody>
+                            {renderTableRows()}
+                           </tbody>
                         </table>
                     }
                 </div>
