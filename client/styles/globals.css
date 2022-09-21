@@ -32,7 +32,6 @@ button:hover {
   background-color: #21e065;
 }
 
-
 h2 {
   color: #111;
   font-family: 'Open Sans Condensed', sans-serif;
@@ -105,17 +104,34 @@ p {
   display: inline-flexbox;
 }
 
-.playlists-parent-container {
-  width: auto;
-  height: max-content;
+.fetch-playlists-container {
   text-align: center;
   margin-top: 30px;
+  align-items: center;
 }
 
 .playlists-child-container {
-  width: auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 75px;
 }
 
-.playlists-table {
-  width: 100%;
+.playlist-container {
+  flex: 1 0 auto;
+  display: flex;
+  align-items: center;
+  margin: 10px 10px;
 }
+
+.playlist-circular-data-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-bottom: 75px;
+  flex: 1;
+}
+
+.playlist-data-component{
+  margin-top: 10px;
+  margin-bottom: 40px;
+} 

@@ -9,20 +9,6 @@ export default function Playlists() {
     const [playlists, setPlaylists] = useState([])
     const [fetching, setFetching] = useState(false)
 
-    const renderTableRows = () =>{
-        const rows = []
-        for (let i = 0; i < playlists.length - 2; i = i + 3){
-            rows.push(
-                <tr>
-                    <td><Playlist key={i} name={playlists[i].name} tracks={playlists[i].tracks} image={playlists[i].images[0]} /></td>
-                    <td><Playlist key={i + 1} name={playlists[i + 1].name} tracks={playlists[i + 1].tracks} image={playlists[i + 1].images[0]} /></td>
-                    <td><Playlist key={i + 2} name={playlists[i + 2].name} tracks={playlists[i + 2].tracks} image={playlists[i + 2].images[0]} /></td>
-                </tr>
-            )
-        }
-        return rows
-    }
-
     if (session) {
         const options = {
             method: "GET",
@@ -48,16 +34,16 @@ export default function Playlists() {
         }
 
         return (
-            <div className="playlists-parent-container">
+            <div className="fetch-playlists-container">
                 <button onClick={() => getUserPlaylists()}>Display Playlists</button>
                 <div className="playlists-child-container">
-                    {fetching ? <CircleLoader /> : 
-                        <table className="playlists-table">
-                            <tbody>
-                            {renderTableRows()}
-                           </tbody>
-                        </table>
-                    }
+                    {fetching ? <CircleLoader /> : playlists.map((playlistData, i) => {
+                        return(
+                        <div className="playlist-container" key={i}> 
+                            <Playlist key={i} name={playlistData.name} tracks={playlistData.tracks} image={playlistData.images[0]} />
+                        </div>
+                        ) 
+                    })}
                 </div>
             </div>
         )

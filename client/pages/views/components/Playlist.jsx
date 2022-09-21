@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import Image from "next/future/image"
 import { buildStyles, CircularProgressbar } from 'react-circular-progressbar';
+import ProgressBar from "@ramonak/react-progress-bar";
 import 'react-circular-progressbar/dist/styles.css';
 
 /** 
@@ -27,45 +28,49 @@ export default function Playlist({name, tracks, image}) {
         avgDanceability.current = ((tracks.reduce((accumulator, current) => {return accumulator + current.danceability}, 0) / length) * 100).toFixed(2)
         avgEnergy.current = ((tracks.reduce((accumulator, current) => {return accumulator + current.energy}, 0) / length) * 100).toFixed(2)
         avgInstrumentalness.current = ((tracks.reduce((accumulator, current) => {return accumulator + current.instrumentalness}, 0) / length) * 100).toFixed(2)
-        avgDuration.current = (tracks.reduce((accumulator, current) => {return accumulator + current.duration_ms}, 0) / length) / 100
-        avgTempo.current = tracks.reduce((accumulator, current) => {return accumulator + current.tempo}, 0) / length
+        avgDuration.current = Math.round((tracks.reduce((accumulator, current) => {return accumulator + current.duration_ms}, 0) / length) / 1000)
+        avgTempo.current = Math.round(tracks.reduce((accumulator, current) => {return accumulator + current.tempo}, 0) / length)
     }, [tracks, length])
 
     /**
-     * TODO: Fix floating point errors
-     * TODO: Progress bar view also for duration and tempo
-     * TODO: Column view for the circular progress bars
+     * TODO:Adjust the data to show on click to playlist image
      */
     return (
-        <div className='playlist-container'>
+        <div className='playlist'>
             <Image alt='playlist-image' width={150} height={150} src={image.url} style={{"borderRadius": "50%"}}/>
             <h3>{name}</h3>
-            {tracks ? <div className="playlist-info-text">
-                <div style={{ width: 150, height: 150 }}>
-                    <h4>Popularity {avgPopularity.current}</h4>
-                    <CircularProgressbar value={(avgPopularity.current)} minValue={0} maxValue={100} text={`${avgPopularity.current}%`} styles={buildStyles({ textSize: '16px', textColor: '#21e065', pathColor: `rgb(33, 224, 101)`})}/>
+            {tracks ?
+                <div className="playlist-circular-data-container">
+                    <div className='playlist-data-component' style={{ width: 150, height: 150 }}>
+                        <h4>Popularity</h4>
+                        <CircularProgressbar value={(avgPopularity.current)} minValue={0} maxValue={100} text={`${avgPopularity.current}`} styles={buildStyles({ textSize: '16px', textColor: '#21e065', pathColor: `rgb(33, 224, 101)`})}/>
+                    </div>
+                    <div className='playlist-data-component' style={{ width: 150, height: 150 }}>
+                        <h4>Acousticness</h4>
+                        <CircularProgressbar value={(avgAcousticness.current)} minValue={0} maxValue={100} text={`${avgAcousticness.current}`} styles={buildStyles({ textSize: '16px', textColor: '#21e065', pathColor: `rgb(33, 224, 101)`})}/>
+                    </div>
+                    <div className='playlist-data-component' style={{ width: 150, height: 150 }}>
+                        <h4>Danceability</h4>
+                        <CircularProgressbar value={(avgDanceability.current)} minValue={0} maxValue={100} text={`${avgDanceability.current}`} styles={buildStyles({ textSize: '16px', textColor: '#21e065', pathColor: `rgb(33, 224, 101)`})}/>
+                    </div>
+                    <div className='playlist-data-component' style={{ width: 150, height: 150 }}>
+                        <h4>Energy</h4>
+                        <CircularProgressbar value={(avgEnergy.current)} minValue={0} maxValue={100} text={`${avgEnergy.current}`} styles={buildStyles({ textSize: '16px', textColor: '#21e065', pathColor: `rgb(33, 224, 101)`})}/>
+                    </div>
+                    <div className='playlist-data-component' style={{ width: 150, height: 150 }}>
+                        <h4>Instrumentalness</h4>
+                        <CircularProgressbar value={(avgInstrumentalness.current)} minValue={0} maxValue={100} text={`${avgInstrumentalness.current}`} styles={buildStyles({ textSize: '16px', textColor: '#21e065', pathColor: `rgb(33, 224, 101)`})}/>
+                    </div>
+                    <div className='playlist-data-component' style={{ width: 150, height: 150 }}>
+                        <h4>Duration</h4>
+                        <CircularProgressbar value={(avgDuration.current)} minValue={0} maxValue={avgDuration.current} text={`${avgDuration.current} seconds`} styles={buildStyles({ textSize: '16px', textColor: '#21e065', pathColor: `rgb(33, 224, 101)`})}/>
+                    </div>
+                    <div className='playlist-data-component' style={{ width: 150, height: 150 }}>
+                        <h4>Tempo</h4>
+                        <CircularProgressbar value={(avgTempo.current)} minValue={0} maxValue={avgTempo} text={`${avgTempo.current} bpm`} styles={buildStyles({ textSize: '16px', textColor: '#21e065', pathColor: `rgb(33, 224, 101)`})}/>
+                    </div>
                 </div>
-                <div style={{ width: 150, height: 150 }}>
-                    <h4>Acousticness</h4>
-                    <CircularProgressbar value={(avgAcousticness.current)} minValue={0} maxValue={100} text={`${avgAcousticness.current}%`} styles={buildStyles({ textSize: '16px', textColor: '#21e065', pathColor: `rgb(33, 224, 101)`})}/>
-                </div>
-                <div style={{ width: 150, height: 150 }}>
-                    <h4>Danceability</h4>
-                    <CircularProgressbar value={(avgDanceability.current)} minValue={0} maxValue={100} text={`${avgDanceability.current}%`} styles={buildStyles({ textSize: '16px', textColor: '#21e065', pathColor: `rgb(33, 224, 101)`})}/>
-                </div>
-                <div style={{ width: 150, height: 150 }}>
-                    <h4>Energy</h4>
-                    <CircularProgressbar value={(avgEnergy.current)} minValue={0} maxValue={100} text={`${avgEnergy.current}%`} styles={buildStyles({ textSize: '16px', textColor: '#21e065', pathColor: `rgb(33, 224, 101)`})}/>
-                </div>
-                <div style={{ width: 150, height: 150 }}>
-                    <h4>Instrumentalness</h4>
-                    <CircularProgressbar value={(avgInstrumentalness.current)} minValue={0} maxValue={100} text={`${avgInstrumentalness.current}%`} styles={buildStyles({ textSize: '16px', textColor: '#21e065', pathColor: `rgb(33, 224, 101)`})}/>
-                </div>
-                <p>
-                    Duration: {Math.round(avgDuration.current)} seconds<br/>
-                    Tempo: {Math.round(avgTempo.current)} bpm<br/>
-                </p>
-            </div> : <div className='podcast-playlist'/>}
+                 : <div className='podcast-playlist'/>}
         </div>
     )
 }
