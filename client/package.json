@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ramonak/react-progress-bar": "^5.0.2",
     "framer-motion": "^7.3.2",
     "next": "12.3.0",
     "next-auth": "^4.10.3",
