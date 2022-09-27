@@ -1,7 +1,7 @@
-package playlist
+package playlists
 
 import (
-	"api/pkg/track"
+	t "tracks-server/tracks"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -13,23 +13,23 @@ import (
 type Playlist struct {
 	Id string `json:"id"`
 	Name   string        `json:"name"`
-	Tracks []track.Track `json:"tracks"`
+	Tracks []t.Track `json:"tracks"`
 	Images []interface{} `json:"images"`
 }
 
 func GetPlaylists(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	
+
 	var data map[string]interface{}
 	var url string
 	var playlists []Playlist
 	var limit string
 	client := &http.Client{}
-	
+
 	accessToken := r.Header.Get("Authorization")
 	username := r.Header.Get("Username")
 	query := r.URL.Query()
-	
+
 	if query["limit"] != nil{
 		limit = query.Get("limit")
 	} else {
@@ -42,7 +42,7 @@ func GetPlaylists(w http.ResponseWriter, r *http.Request) {
 	log.Print("Received limit:", limit)
 	log.Print("Received offset:", offset)
 	log.Print("Received username:", username)
-	
+
 	if accessToken == "" {
 		http.Error(w, "Missing Parameters: Authorization", http.StatusBadRequest)
 		return
@@ -95,7 +95,7 @@ func GetPlaylists(w http.ResponseWriter, r *http.Request) {
 			images := p.(map[string]interface{})["images"].([]interface{})
 			tracksInfo := p.(map[string]interface{})["tracks"].(map[string]interface{})
 			tracksHref := tracksInfo["href"].(string)
-			
+
 			tracks, err := getPlaylistTracks(accessToken, tracksHref)
 			if err != nil {
 				log.Panic(err)
@@ -104,7 +104,7 @@ func GetPlaylists(w http.ResponseWriter, r *http.Request) {
 			playlist := Playlist{Id: id, Name: name, Tracks: tracks, Images: images}
 			playlists = append(playlists, playlist)
 		}
-		
+
 	}
 	result, err := json.Marshal(&playlists)
 	if err != nil {
@@ -114,7 +114,7 @@ func GetPlaylists(w http.ResponseWriter, r *http.Request) {
 	w.Write(result)
 }
 
-func getPlaylistTracks(accessToken string, playlistHref string) ([]track.Track, error) {
+func getPlaylistTracks(accessToken string, playlistHref string) ([]t.Track, error) {
 	var data map[string]interface{}
 	var trackIds [][]string
 	var ids []string
@@ -161,12 +161,12 @@ func getPlaylistTracks(accessToken string, playlistHref string) ([]track.Track, 
 		}
 	}
 	trackIds = append(trackIds, ids)
-	tracks, err := track.GetMultipleTracks(trackIds, accessToken)
+	tracks, err := t.GetMultipleTracks(trackIds, accessToken)
 	if err != nil {
 		return nil, err
 	}
 
-	return tracks.([]track.Track), nil
+	return tracks.([]t.Track), nil
 }
 
 func isOwnedByLoggedInUser(ownerData map[string]interface{}, username string) bool{

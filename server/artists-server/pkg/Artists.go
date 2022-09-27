@@ -1,4 +1,4 @@
-package artist
+package artists
 
 import (
 	"encoding/json"
@@ -10,10 +10,10 @@ import (
 )
 
 type Artist struct {
-	Id         string  `json:"id"`
-	Name       string  `json:"name"`
-	Popularity float64 `json:"popularity"`
-	Images []interface{} `json:"images"`
+	Id         string        `json:"id"`
+	Name       string        `json:"name"`
+	Popularity float64       `json:"popularity"`
+	Images     []interface{} `json:"images"`
 }
 
 func GetTopArtists(w http.ResponseWriter, r *http.Request) {

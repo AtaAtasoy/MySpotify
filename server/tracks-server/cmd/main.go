@@ -1,9 +1,7 @@
 package main
 
 import (
-	"api/pkg/artist"
-	"api/pkg/playlist"
-	"api/pkg/track"
+	"tracks-server/tracks"
 	"log"
 	"net/http"
 
@@ -16,10 +14,8 @@ func main() {
 	godotenv.Load(".env")
 
 	router := mux.NewRouter()
-	
-	router.HandleFunc("/tracks", track.GetTopTracks)
-	router.HandleFunc("/artists", artist.GetTopArtists)
-	router.HandleFunc("/playlists", playlist.GetPlaylists)
+
+	router.HandleFunc("/tracks", tracks.GetTopTracks)
 
 	//TODO:Setup CORS access origin
 	handler := cors.AllowAll().Handler(router)
