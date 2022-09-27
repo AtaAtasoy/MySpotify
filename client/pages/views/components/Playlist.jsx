@@ -13,7 +13,7 @@ type Playlist struct {
 */
 
 export default function Playlist({name, tracks, image}) {
-    const length = tracks.length ? tracks.length : 1
+    const length = tracks ? tracks.length : 1
     const avgPopularity = useRef(0) // 0 <= popularity <= 100
     const avgAcousticness = useRef(0) // 0 <= acousticness <= 1
     const avgDanceability = useRef(0) // 0 <= danceability <= 1
@@ -37,8 +37,8 @@ export default function Playlist({name, tracks, image}) {
      */
     return (
         <div className='playlist'>
-            <Image alt='playlist-image' width={150} height={150} src={image.url ? image.url : "https://thispersondoesnotexist.com/image"} style={{"borderRadius": "50%"}}/>
-            <h3>{name}</h3>
+            <Image alt='playlist-image' width={150} height={150} src={image ? image.url : "https://thispersondoesnotexist.com/image"} style={{"borderRadius": "50%"}}/>
+            <h3>{name ? name : "Playlist"}</h3>
             {tracks ?
                 <div className="playlist-circular-data-container">
                     <div className='playlist-data-component' style={{ width: 150, height: 150 }}>
