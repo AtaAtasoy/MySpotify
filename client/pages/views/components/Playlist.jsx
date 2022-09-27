@@ -13,7 +13,7 @@ type Playlist struct {
 */
 
 export default function Playlist({name, tracks, image}) {
-    const length = tracks.length
+    const length = tracks.length ? tracks.length : 1
     const avgPopularity = useRef(0) // 0 <= popularity <= 100
     const avgAcousticness = useRef(0) // 0 <= acousticness <= 1
     const avgDanceability = useRef(0) // 0 <= danceability <= 1
