@@ -37,7 +37,7 @@ export default function Playlist({name, tracks, image}) {
      */
     return (
         <div className='playlist'>
-            <Image alt='playlist-image' width={150} height={150} src={image.url} style={{"borderRadius": "50%"}}/>
+            <Image alt='playlist-image' width={150} height={150} src={image.url ? image.url : "https://thispersondoesnotexist.com/image"} style={{"borderRadius": "50%"}}/>
             <h3>{name}</h3>
             {tracks ?
                 <div className="playlist-circular-data-container">
