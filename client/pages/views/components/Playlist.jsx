@@ -1,7 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import Image from "next/future/image"
 import { buildStyles, CircularProgressbar } from 'react-circular-progressbar';
-import ProgressBar from "@ramonak/react-progress-bar";
 import 'react-circular-progressbar/dist/styles.css';
 
 /** 
