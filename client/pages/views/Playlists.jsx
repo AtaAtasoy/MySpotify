@@ -20,6 +20,7 @@ export default function Playlists() {
         }
 
         const getUserPlaylists = () => {
+            console.log(JSON.stringify(session))
             playlists.length = 0
             console.log(url)
             setFetching(true)
