@@ -5,7 +5,7 @@ import Playlist from "./components/Playlist"
 
 export default function Playlists() {
     const { data: session } = useSession()
-    const url = process.env.backendUrl + '/playlists'
+    const url = process.env.PLAYLISTS_SERVER_URI + '/playlists'
     const [playlists, setPlaylists] = useState([])
     const [fetching, setFetching] = useState(false)
 
@@ -21,6 +21,7 @@ export default function Playlists() {
 
         const getUserPlaylists = () => {
             playlists.length = 0
+            console.log(url)
             setFetching(true)
             fetch(url, options)
                 .then(response => {
