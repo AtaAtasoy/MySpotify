@@ -5,7 +5,6 @@ import Playlist from "./components/Playlist"
 
 export default function Playlists() {
     const { data: session } = useSession()
-    const url = process.env.NEXT_PUBLIC_PLAYLISTS_SERVER_URI + '/playlists'
     const [playlists, setPlaylists] = useState([])
     const [fetching, setFetching] = useState(false)
 
@@ -24,7 +23,7 @@ export default function Playlists() {
             playlists.length = 0
             console.log(url)
             setFetching(true)
-            fetch(url, options)
+            fetch(process.env.NEXT_PUBLIC_PLAYLISTS_SERVER_URI, options)
                 .then(response => {
                     response.json().then(json => {
                         setPlaylists(playlists.concat(json))
