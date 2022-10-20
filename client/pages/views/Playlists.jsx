@@ -11,19 +11,18 @@ export default function Playlists() {
     if (session) {
         const options = {
             method: "GET",
-            headers: new Headers({
+            headers: {
                 'Authorization': session.accessToken,
                 'Content-Type': 'application/json',
                 'Username': session.userId
-            }),
+            },
         }
 
         const getUserPlaylists = () => {
             console.log(JSON.stringify(options))
             playlists.length = 0
-            console.log(url)
             setFetching(true)
-            fetch(process.env.NEXT_PUBLIC_PLAYLISTS_SERVER_URI, options)
+            fetch(process.env.NEXT_PUBLIC_PLAYLISTS_SERVER_URI + "/playlists", options)
                 .then(response => {
                     response.json().then(json => {
                         setPlaylists(playlists.concat(json))

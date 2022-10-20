@@ -16,7 +16,7 @@ const spinTransition = {
 
 const circleStyle = {
     display: "block",
-    widt: "3rem",
+    width: "3rem",
     height: "3rem",
     border: "0.5rem solid #e9e9e9",
     borderTop: "0.5rem solid #21e065",
