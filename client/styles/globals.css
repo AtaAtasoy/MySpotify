@@ -131,7 +131,9 @@ p {
   flex: 1;
 }
 
-.playlist-data-component{
+.playlist-attribute-displayer{
   margin-top: 10px;
   margin-bottom: 40px;
+  width: 150px;
+  height: 150px;
 } 

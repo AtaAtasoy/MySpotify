@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import Image from "next/future/image"
 import { buildStyles, CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
+import PlaylistAttributeDisplayer from './PlaylistAttributeDisplayer';
 
 /** 
 type Playlist struct {
@@ -40,34 +41,13 @@ export default function Playlist({name, tracks, image}) {
             <h3>{name ? name : "Playlist"}</h3>
             {tracks ?
                 <div className="playlist-circular-data-container">
-                    <div className='playlist-data-component' style={{ width: 150, height: 150 }}>
-                        <h4>Popularity</h4>
-                        <CircularProgressbar value={(avgPopularity.current)} minValue={0} maxValue={100} text={`${avgPopularity.current}`} styles={buildStyles({ textSize: '16px', textColor: '#21e065', pathColor: `rgb(33, 224, 101)`})}/>
-                    </div>
-                    <div className='playlist-data-component' style={{ width: 150, height: 150 }}>
-                        <h4>Acousticness</h4>
-                        <CircularProgressbar value={(avgAcousticness.current)} minValue={0} maxValue={100} text={`${avgAcousticness.current}`} styles={buildStyles({ textSize: '16px', textColor: '#21e065', pathColor: `rgb(33, 224, 101)`})}/>
-                    </div>
-                    <div className='playlist-data-component' style={{ width: 150, height: 150 }}>
-                        <h4>Danceability</h4>
-                        <CircularProgressbar value={(avgDanceability.current)} minValue={0} maxValue={100} text={`${avgDanceability.current}`} styles={buildStyles({ textSize: '16px', textColor: '#21e065', pathColor: `rgb(33, 224, 101)`})}/>
-                    </div>
-                    <div className='playlist-data-component' style={{ width: 150, height: 150 }}>
-                        <h4>Energy</h4>
-                        <CircularProgressbar value={(avgEnergy.current)} minValue={0} maxValue={100} text={`${avgEnergy.current}`} styles={buildStyles({ textSize: '16px', textColor: '#21e065', pathColor: `rgb(33, 224, 101)`})}/>
-                    </div>
-                    <div className='playlist-data-component' style={{ width: 150, height: 150 }}>
-                        <h4>Instrumentalness</h4>
-                        <CircularProgressbar value={(avgInstrumentalness.current)} minValue={0} maxValue={100} text={`${avgInstrumentalness.current}`} styles={buildStyles({ textSize: '16px', textColor: '#21e065', pathColor: `rgb(33, 224, 101)`})}/>
-                    </div>
-                    <div className='playlist-data-component' style={{ width: 150, height: 150 }}>
-                        <h4>Duration</h4>
-                        <CircularProgressbar value={(avgDuration.current)} minValue={0} maxValue={avgDuration.current} text={`${avgDuration.current} seconds`} styles={buildStyles({ textSize: '16px', textColor: '#21e065', pathColor: `rgb(33, 224, 101)`})}/>
-                    </div>
-                    <div className='playlist-data-component' style={{ width: 150, height: 150 }}>
-                        <h4>Tempo</h4>
-                        <CircularProgressbar value={(avgTempo.current)} minValue={0} maxValue={avgTempo} text={`${avgTempo.current} bpm`} styles={buildStyles({ textSize: '16px', textColor: '#21e065', pathColor: `rgb(33, 224, 101)`})}/>
-                    </div>
+                        <PlaylistAttributeDisplayer attributeName={"Popularity"} value={avgPopularity.current} minValue={0} maxValue={100} />
+                        <PlaylistAttributeDisplayer attributeName={"Acousticness"} value={avgAcousticness.current} minValue={0} maxValue={100} />
+                        <PlaylistAttributeDisplayer attributeName={"Danceability"} value={avgDanceability.current} minValue={0} maxValue={100} />
+                        <PlaylistAttributeDisplayer attributeName={"Energy"} value={avgEnergy.current} minValue={0} maxValue={100} />
+                        <PlaylistAttributeDisplayer attributeName={"Instrumentalness"} value={avgInstrumentalness.current} minValue={0} maxValue={100} />
+                        <PlaylistAttributeDisplayer attributeName={"Tempo"} value={avgTempo.current} minValue={0} maxValue={avgTempo.current} />
+                        <PlaylistAttributeDisplayer attributeName={"Duration"} value={avgDuration.current} minValue={0} maxValue={avgDuration.current} />
                 </div>
                  : <div className='podcast-playlist'/>}
         </div>
