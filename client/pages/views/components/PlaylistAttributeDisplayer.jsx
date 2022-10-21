@@ -5,7 +5,7 @@ export default function PlaylistAttributeDisplayer({attributeName, value, minVal
     return (
         <div className="playlist-attribute-displayer">
             <h4>{attributeName}</h4>
-            <CircularProgressbar value={value} minValue={minValue} maxValue={maxValue} text={`${value}`} styles={buildStyles({ textSize: '16px', textColor: '#21e065', pathColor: `rgb(33, 224, 101)`})}/>
+            <CircularProgressbar value={value} minValue={minValue} maxValue={maxValue} text={attributeName != "Duration" ? `${value}` : `${value} seconds` } styles={buildStyles({ textSize: '16px', textColor: '#21e065', pathColor: `rgb(33, 224, 101)`})}/>
         </div>
     )
 }

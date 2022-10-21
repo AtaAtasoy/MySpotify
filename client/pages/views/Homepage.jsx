@@ -13,7 +13,6 @@ export default function Homepage() {
                     <UserProfile />
                     <button onClick={() => signOut('spotify')}>Sign out</button>
                 </div>
-                <FavoriteArtists />
                 <Playlists />
             </div>
         )
