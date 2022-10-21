@@ -1,4 +1,3 @@
-html,
 a {
   color: inherit;
   text-decoration: none;
@@ -93,47 +92,15 @@ p {
   border-radius: 50%;
 }
 
-.favorite-artists-parent-container{
-  width: auto;
-  height: max-content;
-  text-align: center;
-}
-
-.favorite-artists-child-container {
-  columns: 5 auto;
-  display: inline-flexbox;
-}
-
 .fetch-playlists-container {
   text-align: center;
   margin-top: 30px;
+}
+
+.playlist{
   align-items: center;
 }
 
-.playlists-child-container {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  margin-bottom: 75px;
+.radial-area-chart{
+  height: 400px;
 }
-
-.playlist-container {
-  flex: 1 0 auto;
-  display: flex;
-  align-items: center;
-  margin: 10px 10px;
-}
-
-.playlist-circular-data-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  margin-bottom: 75px;
-  flex: 1;
-}
-
-.playlist-attribute-displayer{
-  margin-top: 10px;
-  margin-bottom: 40px;
-  width: 150px;
-  height: 150px;
-} 
