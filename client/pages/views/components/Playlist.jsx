@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import Image from "next/future/image"
 import AttributesRadialAreaChart from './AttributesRadialAreaChart';
+import PopularityAreaChart from './PopularityAreaChart';
 
 /** 
 type Playlist struct {
@@ -51,6 +52,7 @@ export default function Playlist({ name, tracks, image }) {
                     { x: "Instrumentalness", y: Number(avgInstrumentalness.current) },
                     { x: "Valence", y: Number(avgValence.current) }
                 ]} />
+                <PopularityAreaChart tracks={tracks} />
             </div>
         )
     }
