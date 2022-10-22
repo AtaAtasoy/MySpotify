@@ -33,7 +33,6 @@ export default function Playlist({ name, tracks, image }) {
         avgValence.current = ((tracks.reduce((accumulator, current) => { return accumulator + current.valence }, 0) / length) * 100).toFixed(2)
         avgDuration.current = Math.round((tracks.reduce((accumulator, current) => { return accumulator + current.duration_ms }, 0) / length) / 1000)
         avgTempo.current = Math.round(tracks.reduce((accumulator, current) => { return accumulator + current.tempo }, 0) / length)
-
     }, [tracks, length])
 
     /**

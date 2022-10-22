@@ -2,9 +2,12 @@ import React from "react";
 import { VictoryChart, VictoryBar, VictoryScatter } from "victory";
 
 export default function PopularityAreaChart({ tracks }) {
+    const data = []
 
-    const data = tracks.reduce((accumulator, current) => { return accumulator + { x: current.name, y: current.popularity } }, [])
-
+    for (let i = 0; i < tracks.length; i++) {
+        const currentTrack = tracks[i]
+        data.push({ x: currentTrack.name, y: currentTrack.popularity })
+    }
     return (
         <div className="popularity-area-chart">
             <VictoryChart horizontal maxDomain={{ y: 100 }}>
