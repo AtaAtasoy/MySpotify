@@ -150,7 +150,6 @@ func GetMultipleTracks(trackIds [][]string, accessToken string) (interface{}, er
 			log.Panic(err)
 			return nil, err
 		}
-		fmt.Println("Multiple Tracks Reponse:", data)
 		for _, track := range data["tracks"].([]interface{}) {
 			if track != nil {
 				parsedTrack, err := parseTrackData(track.(map[string]interface{}), accessToken)
