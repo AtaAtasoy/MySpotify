@@ -18,7 +18,6 @@ export default function AttributesRadialAreaChart({ speechines, acousticness,dan
             <VictoryChart 
                 polar
                 theme={VictoryTheme.material}
-                animate={{ duration: 2000 }}
                 domain={{y: [0, 100]}}
             >
                 <VictoryArea data={data} style={{ data: { fill: "#1ED760"}}} labels={({ datum }) => datum.y}/>
