@@ -13,4 +13,7 @@ require (
 	playlists-server/playlists v0.0.0-00010101000000-000000000000
 )
 
-require tracks-server/tracks v0.0.0-00010101000000-000000000000 // indirect
+require (
+	github.com/shopspring/decimal v1.3.1 // indirect
+	tracks-server/tracks v0.0.0-00010101000000-000000000000 // indirect
+)

@@ -26,7 +26,6 @@ export default function Playlists() {
                 .then(response => {
                     response.json().then(json => {
                         setPlaylists(playlists.concat(json))
-                        console.log(json)
                     })
                 })
                 .finally(() => setFetching(false))
@@ -40,7 +39,7 @@ export default function Playlists() {
                     {fetching ? <CircleLoader /> : playlists.map((playlistData, i) => {
                         return(
                         <div className="playlist-container" key={i}> 
-                            <Playlist key={i} name={playlistData.name} tracks={playlistData.tracks} image={playlistData.images[0]} />
+                            <Playlist key={i} name={playlistData.name} tracks={playlistData.tracks} image={playlistData.images[0]} attributes={playlistData.attributes}/>
                         </div>
                         ) 
                     })}

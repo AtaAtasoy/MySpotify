@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	t "tracks-server/tracks"
+	"github.com/shopspring/decimal"
 )
 
 type Playlist struct {
@@ -145,7 +146,7 @@ func calculatePlaylistAttributes(tracks []t.Track) map[string]float64{
 		danceability += track.Danceability
 		duration += track.Duration_ms
 		energy += track.Energy
-		instrumentalness =+ track.Instrumentalness
+		instrumentalness += track.Instrumentalness
 		liveness += track.Liveness
 		speechiness += track.Speechiness
 		tempo += track.Tempo
@@ -153,15 +154,15 @@ func calculatePlaylistAttributes(tracks []t.Track) map[string]float64{
 	}
 	attributes := make(map[string]float64)
 
-	attributes["popularity"] = (popularity / float64(length))
-	attributes["acousticness"] = (acousticness / float64(length)) * 100
-	attributes["danceability"] = (danceability / float64(length)) * 100
-	attributes["energy"] = (energy / float64(length)) * 100
-	attributes["instrumentalness"] = (instrumentalness / float64(length)) * 100
-	attributes["speechiness"] = (speechiness / float64(length)) * 100
-	attributes["valence"] = (valence / float64(length)) * 100
-	attributes["duration"] = duration / float64(length)
-	attributes["tempo"] = tempo / float64(length)
+	attributes["popularity"], _ = decimal.NewFromFloatWithExponent( (popularity / float64(length) ), -2).Float64()
+	attributes["acousticness"], _ = decimal.NewFromFloatWithExponent( (acousticness / float64(length) ) * 100, -2).Float64()
+	attributes["danceability"], _ =  decimal.NewFromFloatWithExponent( (danceability / float64(length) ) * 100, -2).Float64()
+	attributes["energy"], _ =  decimal.NewFromFloatWithExponent( (energy / float64(length) ) * 100, -2).Float64()
+	attributes["instrumentalness"], _ =  decimal.NewFromFloatWithExponent( (instrumentalness / float64(length) ) * 100, -2).Float64()
+	attributes["speechiness"], _ =  decimal.NewFromFloatWithExponent( (speechiness / float64(length) ) * 100, -2).Float64()
+	attributes["valence"], _ =  decimal.NewFromFloatWithExponent( (valence / float64(length) ) * 100, -2).Float64()
+	attributes["duration"], _ = decimal.NewFromFloatWithExponent( (duration / float64(length) ) / 1000, -2).Float64()
+	attributes["tempo"], _ = decimal.NewFromFloatWithExponent( (tempo / float64(length) ), -2).Float64()
 
 	return attributes
 }
