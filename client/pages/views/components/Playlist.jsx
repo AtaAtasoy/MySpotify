@@ -13,18 +13,24 @@ type Playlist struct {
 }*/
 
 export default function Playlist({ name, tracks, image, attributes }) {
-    return (
-        <div className='playlist'>
-            <Image alt='playlist-image' width={150} height={150} src={image ? image.url : "https://thispersondoesnotexist.com/image"} style={{ "borderRadius": "50%" }} />
-            <h3>{name ? name : "Playlist"}</h3>
-            <AttributesRadialAreaChart
-                acousticness={ attributes["acousticness"]}
-                danceability={ attributes["danceability"] }
-                energy={ attributes["energy"] }
-                instrumentalness={ attributes["instrumentalness"] }
-                speechines={ attributes["speechiness"] }
-                valence={ attributes["valence"] } />
-            <PopularityAreaChart tracks={tracks} />
-        </div>
-    )
+    if (attributes){
+        return (
+            <div className='playlist'>
+                <Image alt='playlist-image' width={150} height={150} src={image ? image.url : "https://thispersondoesnotexist.com/image"} style={{ "borderRadius": "50%" }} />
+                <h3>{name ? name : "Playlist"}</h3>
+                <AttributesRadialAreaChart
+                    acousticness={ attributes["acousticness"]}
+                    danceability={ attributes["danceability"] }
+                    energy={ attributes["energy"] }
+                    instrumentalness={ attributes["instrumentalness"] }
+                    speechines={ attributes["speechiness"] }
+                    valence={ attributes["valence"] } />
+                <PopularityAreaChart tracks={tracks} />
+            </div>
+        )
+    } else {
+        return(
+            <div></div>
+        )
+    }
 }
