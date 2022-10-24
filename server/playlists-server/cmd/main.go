@@ -13,7 +13,6 @@ import (
 
 func rootHandler(w http.ResponseWriter, r *http.Request){
 	fmt.Fprintf(w, "Welcome to playlists-server")
-	w.WriteHeader(http.StatusOK)
 }
 
 func main() {
@@ -22,7 +21,7 @@ func main() {
 	router := mux.NewRouter()
 	
 	router.HandleFunc("/", rootHandler)
-	router.HandleFunc("/playlists", playlists.GetPlaylists)
+	router.HandleFunc("/playlists", playlists.GetPlaylists)	
 
 	//TODO:Setup CORS access origin
 	handler := cors.AllowAll().Handler(router)
