@@ -33,7 +33,7 @@ export default function Playlists() {
         }
         return (
             <div className="fetch-playlists-container">
-                <button  disabled={fetching} onClick={() => getUserPlaylists()}>{fetching ? "Reloading": "Display Playlists"}</button>
+                <button  disabled={fetching} onClick={() => getUserPlaylists()}>{fetching ? "Loading": "Display Playlists"}</button>
                 <div className="playlists-child-container">
                     {fetching ? <CircleLoader /> : playlists.map((playlistData, i) => {
                         return(

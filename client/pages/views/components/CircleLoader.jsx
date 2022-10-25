@@ -6,6 +6,7 @@ const containerStyle = {
     position: 'relative',
     width: "3rem",
     height: "3rem",
+    textAlign: "-webkit-center",
 };
 
 const spinTransition = {
