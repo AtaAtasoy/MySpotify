@@ -15,7 +15,6 @@ export default function AttributesRadialAreaChart({ speechines, acousticness,dan
     
         return(
             <div className="radial-area-chart">
-                {console.log("Rendering area chart" + data)}
                 <VictoryChart 
                     polar
                     theme={VictoryTheme.material}

@@ -97,10 +97,15 @@ p {
 }
 
 .radial-area-chart {
-    height: 400px;
+    height: auto;
+}
+
+.playlist-visualization-container{
+    display: flex;      
+    height: 450px;
 }
 
 .popularity-area-chart{
-    width: 100%;
-    height: 100%;
+    flex: 1 1 auto;
+    overflow-y: auto;
 }
