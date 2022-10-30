@@ -1,0 +1,10 @@
+go 1.19
+
+use (
+	./artists-server/cmd
+	./artists-server/pkg
+	./playlists-server/cmd
+	./playlists-server/pkg
+	./tracks-server/cmd
+	./tracks-server/pkg
+)
