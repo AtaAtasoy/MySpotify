@@ -1,11 +1,14 @@
 package playlists
+
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"log"
 	"net/http"
 	t "tracks-server/tracks"
+
 	"github.com/shopspring/decimal"
 )
 
@@ -36,7 +39,7 @@ func FetchPlaylists(accessToken string, username string, url string) ([]Playlist
 
 	log.Println(res.Status)
 	if res.Status != "200 OK" {
-		return nil, err
+		return nil, errors.New("Could not fetch playlists." + res.Status)
 	}
 	defer res.Body.Close()
 

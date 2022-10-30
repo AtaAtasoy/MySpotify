@@ -45,7 +45,7 @@ func GetPlaylists(w http.ResponseWriter, r *http.Request) {
 
 	playlists, err := FetchPlaylists(accessToken, username, url)
 	if err != nil{
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 	
