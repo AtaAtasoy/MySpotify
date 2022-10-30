@@ -89,7 +89,7 @@ p {
 }
 
 .fetch-playlists-container {
-    text-align: -webkit-center;
+    text-align: center;
 }
 
 .playlist {
@@ -101,8 +101,8 @@ p {
 }
 
 .playlist-visualization-container{
-    display: flex;      
-    height: 450px;
+    display: flex;  
+    height: 450px;    
 }
 
 .popularity-area-chart{
