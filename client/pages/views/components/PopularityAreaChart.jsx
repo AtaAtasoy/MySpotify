@@ -1,5 +1,5 @@
 import React from "react";
-import { VictoryChart, VictoryBar, VictoryScatter, VictoryAxis, VictoryLabel, VictoryLegend } from "victory";
+import PopularityChartVisuals from "./PopularityChartVisuals";
 
 export default function PopularityAreaChart({ tracks }) {
     const data = []
@@ -22,65 +22,14 @@ export default function PopularityAreaChart({ tracks }) {
             const visualizedData = leastPopularTracks.concat(mostPopularTracks)
             return (
                 <div className="popularity-area-chart">
-                    <VictoryChart domainPadding={10} title="Your Most Popular and Least Popular 5 Songs" padding={{bottom: 50, left: 70, top: 10}}>
-                        <VictoryAxis dependentAxis={true} labelComponent={(<VictoryLabel />)} label={"Popularity"}/>
-                        <VictoryAxis
-                            tickLabelComponent={(
-                                <VictoryLabel
-                                   textAnchor={'end'}
-                                   dx={5}
-                                />
-                            )}
-                            style={{
-                                tickLabels: {
-                                    fontSize: 10
-                                },
-                            }}
-                        />
-                        <VictoryBar
-                            padding={{right: 5}}
-                            data={visualizedData}
-                            horizontal={true}
-                            domain={{ y: [0, 100] }}
-                            style={{
-                                data: {
-                                    fill: ({ datum }) =>
-                                        datum.x === 'Mean Value' ? 'red' : '#1ED760'
-                                }
-                            }}
-                        />
-                        <VictoryScatter data={visualizedData}
-                            style={{ labels: { fill: "black" } }}
-                            labels={({ datum }) => datum.y}
-                            labelComponent={<VictoryLabel />} />
-                    </VictoryChart>
+                    <PopularityChartVisuals data={visualizedData} />
                 </div>
             )
         }
         else {
             return (
                 <div className="popularity-area-chart">
-                    <VictoryChart domainPadding={20} title="Your Most Popular and Least Popular 5 Songs" padding={{bottom: 50, left: 70, top: 10}}>
-                    <VictoryAxis dependentAxis={true} labelComponent={(<VictoryLabel />)} label={"Popularity"}/>
-                        <VictoryAxis
-                            tickLabelComponent={(
-                                <VictoryLabel
-                                   textAnchor={'end'}
-                                   dx={5}
-                                />
-                            )}
-                        />
-                        <VictoryBar
-                            data={data}
-                            horizontal={true}
-                            domain={{ y: [0, 100] }}
-                            style={{ data: { fill: '#1ED760' } }}
-                        />
-                        <VictoryScatter data={data}
-                            style={{ labels: { fill: "black" } }}
-                            labels={({ datum }) => datum.y}
-                            labelComponent={<VictoryLabel />} />
-                    </VictoryChart>
+                    <PopularityChartVisuals data={data} />
                 </div>
             )
         }
