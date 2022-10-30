@@ -61,7 +61,7 @@ export default function PopularityAreaChart({ tracks }) {
             return (
                 <div className="popularity-area-chart">
                     <VictoryChart domainPadding={20} title="Your Most Popular and Least Popular 5 Songs" padding={{bottom: 50, left: 70, top: 10}}>
-                        <VictoryAxis dependentAxis={true} labelComponent={(<VictoryLabel x={0} />)} />
+                    <VictoryAxis dependentAxis={true} labelComponent={(<VictoryLabel />)} label={"Popularity"}/>
                         <VictoryAxis
                             tickLabelComponent={(
                                 <VictoryLabel
