@@ -1,3 +1,7 @@
 # MySpotify
 
-Creates an overall score for your Spotify Profile based on your top tracks, top artists and songs in your playlists.
+Provides data visualization based on your Spotify Playlists.
+
+Hosted on Vercel & AWS.
+
+[Link](https://my-spotify-client.vercel.app/)
