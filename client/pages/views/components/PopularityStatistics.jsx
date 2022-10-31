@@ -56,7 +56,7 @@ export default function PopularityStatistics({ tracks, name }) {
                     <Row>
                         <Col style={{ "paddingRight": "20px" }}>
                             <h3>5 Most Popular Tracks</h3>
-                            {mostPopularTracks.map((track, index) => <p>{index + 1}.{track.x}</p>)}
+                            {mostPopularTracks.map((track, index) => <p key={index}>{index + 1}.{track.x}</p>)}
                             <Link target="_blank" onClick={() => showDrawer(length)}>
                                 Click to view details.
                             </Link>
@@ -72,7 +72,7 @@ export default function PopularityStatistics({ tracks, name }) {
                         </Col>
                         <Col>
                             <h3>5 Least Popular Tracks</h3>
-                            {leastPopularTracks.map((track, index) => <p>{index + 1}.{track.x}</p>)}
+                            {leastPopularTracks.map((track, index) => <p key={index}>{index + 1}.{track.x}</p>)}
                             {length >= 80 && <Text type="danger">Playlists containing 80 or more tracks might not render properly.</Text>}
                         </Col>
                     </Row>
@@ -90,7 +90,7 @@ export default function PopularityStatistics({ tracks, name }) {
                         <Col style={{ "textAlign": "start", "paddingRight": "20px" }}>
                             {data.map((track, index) => {
                                 if (index + 1 <= 5)
-                                    return <p>{index + 1}.{track.x}</p>
+                                    return <p key={index}>{index + 1}.{track.x}</p>
                             })}
                             <Link target="_blank" onClick={() => showDrawer(length)}>
                                 Click to view details
@@ -103,7 +103,7 @@ export default function PopularityStatistics({ tracks, name }) {
                         <Col style={{ "textAlign": "start" }}>
                             {data.map((track, index) => {
                                 if (index + 1 > 5)
-                                    return <p>{index + 1}.{track.x}</p>
+                                    return <p key={index}>{index + 1}.{track.x}</p>
                             })}
                         </Col>
                     </Row>

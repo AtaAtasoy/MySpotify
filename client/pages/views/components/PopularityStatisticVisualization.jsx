@@ -2,7 +2,7 @@ import React from "react";
 import { VictoryChart, VictoryBar, VictoryScatter, VictoryAxis, VictoryLabel } from "victory";
 
 export default function PopularityStatisticVisualization({ data, width, height, domainPadding, fontSize }) {
-    if (width && data && height) {
+    if (width && data && height && domainPadding && fontSize) {
         return (
             <VictoryChart domainPadding={domainPadding} title="Popularity of the songs in your playlist" width={width} height={height}>
                 <VictoryAxis dependentAxis={true} labelComponent={(<VictoryLabel />)} label={"Popularity"} />

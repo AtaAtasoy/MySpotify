@@ -14,7 +14,7 @@ export default function Playlists() {
         if (item) {
             setPlaylists(item)
         }
-    })
+    }, [setPlaylists])
 
     if (session) {
         const options = {
