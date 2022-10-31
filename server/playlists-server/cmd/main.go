@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"fmt"
 	"log"
 	"net/http"
@@ -24,7 +25,7 @@ func main() {
 	router.HandleFunc("/playlists", playlists.GetPlaylists)
 
 	c := cors.New(cors.Options{
-		AllowedOrigins: []string{"*.ngrok.io"},
+		AllowedOrigins: []string{os.Getenv("ORIGIN")},
 		AllowedMethods: []string{"POST", "GET", "OPTIONS", "PUT"},
 		AllowedHeaders: []string{"Accept", "Accept-Language", "Authorization", "Content-Type", "Origin", "Referer", "Accept", "User-Agent", "Username",},
 	})
