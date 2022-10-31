@@ -1,6 +1,5 @@
 import { Col, Row } from "antd"
 import { useSession, signIn, signOut } from "next-auth/react"
-import FavoriteArtists from "./FavoriteArtists"
 import Playlists from "./Playlists"
 import UserProfile from "./UserProfile"
 

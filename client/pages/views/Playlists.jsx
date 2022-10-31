@@ -11,7 +11,7 @@ export default function Playlists() {
 
     useEffect(() => {
         const item = JSON.parse(localStorage.getItem('playlists'))
-        if (item){
+        if (item) {
             setPlaylists(item)
         }
     })
@@ -27,25 +27,23 @@ export default function Playlists() {
         }
 
         const getUserPlaylists = () => {
-            if (!JSON.parse(localStorage.getItem('playlists'))){
-                playlists.length = 0
-                setFetching(true)
-                fetch(process.env.NEXT_PUBLIC_PLAYLISTS_SERVER_URI + "/playlists", options)
-                    .then(response => {
-                        if (response.status === 400) {
-                            throw new Error('Could not fetch playlists.' + response.statusText);
-                        }
-                        response.json().then(json => {
-                            localStorage.setItem('playlists', JSON.stringify(json))
-                            setPlaylists(playlists.concat(json))
-                        })
+            playlists.length = 0
+            setFetching(true)
+            fetch(process.env.NEXT_PUBLIC_PLAYLISTS_SERVER_URI + "/playlists", options)
+                .then(response => {
+                    if (response.status === 400) {
+                        throw new Error('Could not fetch playlists.' + response.statusText);
+                    }
+                    response.json().then(json => {
+                        localStorage.setItem('playlists', JSON.stringify(json))
+                        setPlaylists(playlists.concat(json))
                     })
-                    .finally(() => setFetching(false))
-                    .catch(err => {
-                        console.error(err)
-                        setError(err)
-                    })
-            }
+                })
+                .finally(() => setFetching(false))
+                .catch(err => {
+                    console.error(err)
+                    setError(err)
+                })
         }
         if (error.length === 0) {
             return (
@@ -66,7 +64,7 @@ export default function Playlists() {
         else {
             return (
                 <div className="fetch-playlists-container">
-                    <button className="spotify-themed-button"disabled={fetching} onClick={() => getUserPlaylists()}>{fetching ? "Loading" : "Display Playlists"}</button>
+                    <button className="spotify-themed-button" disabled={fetching} onClick={() => getUserPlaylists()}>{fetching ? "Loading" : "Display Playlists"}</button>
                     <p>{error.toString()}</p>
                     <p>Signing out and signing back in can solve your problem...</p>
                 </div>

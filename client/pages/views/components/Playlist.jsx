@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from "next/future/image"
 import AttributesRadialAreaChart from './AttributesRadialAreaChart';
-import PopularityAreaChart from './PopularityAreaChart';
+import PopularityStatistics from './PopularityStatistics';
 import { Col, Row } from 'antd';
 
 /** 
@@ -30,7 +30,7 @@ export default function Playlist({ name, tracks, image, attributes }) {
                             valence={attributes["valence"]} />
                     </Col>
                     <Col>
-                        <PopularityAreaChart tracks={tracks} />
+                        <PopularityStatistics tracks={tracks} name={name} />
                     </Col>
                 </Row>
             </div>
