@@ -4,4 +4,4 @@ Provides data visualization based on your Spotify Playlists.
 
 Hosted on Vercel & AWS.
 
-[Link](https://my-spotify-client.vercel.app/)
+[Link](https://my-spotify-client.vercel.app/). Safari not supported...
