@@ -1,8 +1,6 @@
 package tracks
 
 import (
-	a "artists-server/artists"
-
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -26,7 +24,6 @@ type Track struct {
 	Speechiness float64 `json:"speechiness"`
 	Tempo float64 `json:"tempo"`
 	Valence float64 `json:"valence"`
-	Artists []a.Artist `json:"artists"`
 }
 
 
@@ -84,12 +81,8 @@ func ParseTrackData(track map[string]interface{}, accessToken string) (interface
 	id := track["id"].(string)
 	name := track["name"].(string)
 	popularity := track["popularity"].(float64)
-	artists := make([]a.Artist, 0)
-	for _, artist := range track["artists"].(map[string]interface{}){
-		artists = append(artists, a.ParseArtistData(artist.(map[string]interface{})))
-	}
 	
-	return Track{Id: id, Name: name, Popularity: popularity, Artists: artists}, nil
+	return Track{Id: id, Name: name, Popularity: popularity}, nil
 }
 
 func (t *Track) SetAudioFeatures(features map[string]interface{}) {

@@ -74,7 +74,7 @@ func GetTopTracks(w http.ResponseWriter, r *http.Request) {
 		}
 		tracks = append(tracks, parsedTrack.(Track))
 	}
-	tracks, err = getAudioAnalysis(tracks, accessToken.(string))
+	tracks, err = GetAudioAnalysis(tracks, accessToken.(string))
 	if err != nil{
 		log.Panic(err)
 		http.Error(w, "can't get audio analysis", http.StatusInternalServerError)
@@ -143,59 +143,9 @@ func GetMultipleTracks(trackIds [][]string, accessToken string) (interface{}, er
 				parsedTracks = append(parsedTracks, parsedTrack.(Track))
 			}
 		}
-		parsedTracks, err = getAudioAnalysis(parsedTracks, accessToken)
+		parsedTracks, err = GetAudioAnalysis(parsedTracks, accessToken)
 		if err != nil{
 			log.Panic(err)
-		}
-	}
-	return parsedTracks, nil
-}
-
-func getAudioAnalysis(parsedTracks []Track, accessToken string) ([]Track, error) {
-	var data map[string]interface{}
-	client := &http.Client{}
-	url := "https://api.spotify.com/v1/audio-features?ids="
-	for index, track := range parsedTracks {
-		if index == len(parsedTracks)-1 {
-			url = url + track.Id
-		} else {
-			url = url + track.Id + ","
-		}
-	}
-	log.Println("Request: URL", url)
-
-	request, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		log.Panic(err)
-	}
-	request.Header.Add("Authorization", fmt.Sprintf("Bearer %s", accessToken))
-	request.Header.Add("Content-Type", "application/json")
-
-	res, err := client.Do(request)
-	if err != nil {
-		log.Panic(err)
-	}
-	log.Println(res.Status)
-	if res.Status != "200 OK" {
-		return nil, errors.New(res.Status)
-	}
-	defer res.Body.Close()
-
-	responseBody, err := io.ReadAll(res.Body)
-	if err != nil {
-		log.Panic(err)
-	}
-
-	err = json.Unmarshal(responseBody, &data)
-	if err != nil {
-		log.Panic(err)
-		return nil, err
-	}
-	for _, feature := range data["audio_features"].([]interface{}) {
-		for i := range parsedTracks {
-			if parsedTracks[i].Id == feature.(map[string]interface{})["id"].(string) {
-				parsedTracks[i].SetAudioFeatures(feature.(map[string]interface{}))
-			}
 		}
 	}
 	return parsedTracks, nil
