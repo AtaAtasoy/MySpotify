@@ -50,7 +50,7 @@ export default function Playlists() {
         if (error.length === 0) {
             return (
                 <div className="fetch-playlists-container">
-                    <button disabled={fetching} onClick={() => getUserPlaylists()}>{fetching ? "Loading" : "Display Playlists"}</button>
+                    <button className="spotify-themed-button" disabled={fetching} onClick={() => getUserPlaylists()}>{fetching ? "Loading" : "Display Playlists"}</button>
                     <div className="playlists-child-container">
                         {fetching ? <CircleLoader /> : playlists.map((playlistData, i) => {
                             return (
@@ -66,7 +66,7 @@ export default function Playlists() {
         else {
             return (
                 <div className="fetch-playlists-container">
-                    <button disabled={fetching} onClick={() => getUserPlaylists()}>{fetching ? "Loading" : "Display Playlists"}</button>
+                    <button className="spotify-themed-button"disabled={fetching} onClick={() => getUserPlaylists()}>{fetching ? "Loading" : "Display Playlists"}</button>
                     <p>{error.toString()}</p>
                     <p>Signing out and signing back in can solve your problem...</p>
                 </div>

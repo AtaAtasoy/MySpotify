@@ -1,7 +1,8 @@
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import Image from "next/future/image"
 import AttributesRadialAreaChart from './AttributesRadialAreaChart';
 import PopularityAreaChart from './PopularityAreaChart';
+import { Col, Row } from 'antd';
 
 /** 
 type Playlist struct {
@@ -13,25 +14,29 @@ type Playlist struct {
 }*/
 
 export default function Playlist({ name, tracks, image, attributes }) {
-    if (attributes){
+    if (attributes) {
         return (
             <div className='playlist'>
-                <Image alt='playlist-image' width={150} height={150} src={image ? image.url : "https://thispersondoesnotexist.com/image"} style={{ "borderRadius": "50%" }} />
-                <h3>{name ? name : "Playlist"}</h3>
-                <div className='playlist-visualization-container'>
-                    <AttributesRadialAreaChart
-                        acousticness={ attributes["acousticness"]}
-                        danceability={ attributes["danceability"] }
-                        energy={ attributes["energy"] }
-                        instrumentalness={ attributes["instrumentalness"] }
-                        speechines={ attributes["speechiness"] }
-                        valence={ attributes["valence"] } />
-                    <PopularityAreaChart tracks={tracks} />
-                </div>
+                <Image alt='playlist-image' width={150} height={150} src={image ? image.url : "https://thispersondoesnotexist.com/image"} style={{ "borderRadius": "50%"}} />
+                <h3 style={{'paddingTop': '20px'}}>{name ? name : "Playlist"}</h3>
+                <Row className='playlist-visualization-container' align='middle'>
+                    <Col>
+                        <AttributesRadialAreaChart
+                            acousticness={attributes["acousticness"]}
+                            danceability={attributes["danceability"]}
+                            energy={attributes["energy"]}
+                            instrumentalness={attributes["instrumentalness"]}
+                            speechines={attributes["speechiness"]}
+                            valence={attributes["valence"]} />
+                    </Col>
+                    <Col>
+                        <PopularityAreaChart tracks={tracks} />
+                    </Col>
+                </Row>
             </div>
         )
     } else {
-        return(
+        return (
             <div></div>
         )
     }

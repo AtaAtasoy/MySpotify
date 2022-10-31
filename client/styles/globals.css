@@ -3,7 +3,7 @@ a {
     text-decoration: none;
 }
 
-button {
+.spotify-themed-button {
     display: inline-block;
     outline: none;
     cursor: pointer;
@@ -96,15 +96,12 @@ p {
     align-items: center;
 }
 
-.radial-area-chart {
-    height: auto;
-}
-
 .playlist-visualization-container{
     display: flex;  
-    height: 450px;    
+    padding-bottom: 50px;
 }
 
 .popularity-area-chart{
-    flex: 1 1 auto;
+    display: flex;
+    text-align: start;
 }

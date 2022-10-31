@@ -11,7 +11,6 @@ export default function AttributesRadialAreaChart({ speechines, acousticness,dan
             {x: "Instrumentalness", y: instrumentalness},
             {x: "Valence", y: valence}
         ]
-        console.log(data)
     
         return(
             <div className="radial-area-chart">
