@@ -14,6 +14,7 @@ type Artist struct {
 	Name       string        `json:"name"`
 	Popularity float64       `json:"popularity"`
 	Images     []interface{} `json:"images"`
+	Genres	[]string `json:"genres"`
 }
 
 func GetTopArtists(w http.ResponseWriter, r *http.Request) {
@@ -131,5 +132,5 @@ func GetArtistData(accessToken string, artistIds [][]string) (interface{}, error
 }
 
 func ParseArtistData(artist map[string]interface{}) Artist {
-	return Artist{Id: artist["id"].(string), Name: artist["name"].(string), Popularity: artist["popularity"].(float64), Images: artist["images"].([]interface{})}
+	return Artist{Id: artist["id"].(string), Name: artist["name"].(string), Popularity: artist["popularity"].(float64), Images: artist["images"].([]interface{}), Genres: artist["genres"].([]string)}
 }
