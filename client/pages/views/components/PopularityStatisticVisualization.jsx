@@ -1,7 +1,7 @@
 import React from "react";
 import { VictoryChart, VictoryBar, VictoryScatter, VictoryAxis, VictoryLabel } from "victory";
 
-export default function PopularityStatisticVisualization({ data, width, height, domainPadding }) {
+export default function PopularityStatisticVisualization({ data, width, height, domainPadding, fontSize }) {
     if (width && data && height) {
         return (
             <VictoryChart domainPadding={domainPadding} title="Popularity of the songs in your playlist" width={width} height={height}>
@@ -12,6 +12,11 @@ export default function PopularityStatisticVisualization({ data, width, height, 
                             textAnchor={'end'}
                         />
                     )}
+                    style={{
+                        tickLabels: {
+                            fontSize: fontSize
+                        },
+                    }}
                 />
                 <VictoryBar
                     data={data}
@@ -25,7 +30,7 @@ export default function PopularityStatisticVisualization({ data, width, height, 
                     }}
                 />
                 <VictoryScatter data={data}
-                    style={{ labels: { fill: "black" } }}
+                    style={{ labels: { fill: "black", fontSize: fontSize } }}
                     labels={({ datum }) => datum.y}
                     labelComponent={<VictoryLabel />} />
             </VictoryChart>

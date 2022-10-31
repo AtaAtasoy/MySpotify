@@ -7,14 +7,34 @@ const { Text, Link } = Typography;
 export default function PopularityStatistics({ tracks, name }) {
     const data = []
     const [open, setOpen] = useState(false);
+    const [fontSize, setFontSize] = useState(0)
 
-    const showDrawer = () => {
+    const showDrawer = (length) => {
+        decideLabelFontSize(length)
         setOpen(true);
     };
 
     const onClose = () => {
         setOpen(false);
     };
+
+    const decideLabelFontSize = (length) => {
+        if (length <= 10) {
+            setFontSize(24)
+        }
+        else if (length <= 40) {
+            setFontSize(20)
+        }
+        else if (length <= 60) {
+            setFontSize(14)
+        }
+        else if (length <= 80) {
+            setFontSize(12)
+        }
+        else {
+            setFontSize(10)
+        }
+    }
 
     if (tracks) {
         const length = tracks.length
@@ -29,50 +49,60 @@ export default function PopularityStatistics({ tracks, name }) {
         if (length > 10) {
             data.sort((t1, t2) => t1.y - t2.y)
             const leastPopularTracks = data.slice(0, 5)
-            const mostPopularTracks = data.slice(length - 6, length - 1)
+            const mostPopularTracks = data.slice(-5).sort((t1, t2) => t2.y - t1.y)
 
             return (
-                <Col className="popularity-area-chart">
-                    <Col style={{ "paddingRight": "20px" }}>
-                        <h3>5 Most Popular Tracks</h3>
-                        {mostPopularTracks.map((track, index) => <p>{index + 1}.{track.x}</p>)}
-                        <Link target="_blank" onClick={showDrawer}>
-                            Click to view details
-                        </Link>
-                        <Drawer title={`Popularity statistics of ${name}`} open={open} onClose={onClose} placement="bottom" height={800} footer={`Mean Value = ${meanPopularity.toFixed(2)}`}>
-                            {length > 50 ? <Text italic>{length} tracks... You listen to all of these? Really?</Text> : <Text>{length} tracks</Text>}
-                            <PopularityStatisticVisualization data={data} width={700} height={800} domainPadding={10} />
-                        </Drawer>
-                    </Col>
-                    <Col>
-                        <h3>5 Least Popular Tracks</h3>
-                        {leastPopularTracks.map((track, index) => <p>{index + 1}.{track.x}</p>)}
-                    </Col>
+                <Col style={{ "textAlign": "start"}}>
+                    <Row>
+                        <Col style={{ "paddingRight": "20px" }}>
+                            <h3>5 Most Popular Tracks</h3>
+                            {mostPopularTracks.map((track, index) => <p>{index + 1}.{track.x}</p>)}
+                            <Link target="_blank" onClick={() => showDrawer(length)}>
+                                Click to view details.
+                            </Link>
+                            <Drawer title={`Popularity statistics of ${name}`}
+                                open={open} onClose={onClose}
+                                placement="bottom" height={800}
+                                footer={`Mean Value = ${meanPopularity.toFixed(2)}`}
+                                style={{ overflowY: "scroll" }}
+                            >
+                                {length > 50 ? <Text italic>{length} tracks... You listen to all of these? Really?</Text> : <Text italic>{length} tracks</Text>}
+                                <PopularityStatisticVisualization data={data} width={700} height={900} domainPadding={10} fontSize={fontSize} />
+                            </Drawer>
+                        </Col>
+                        <Col>
+                            <h3>5 Least Popular Tracks</h3>
+                            {leastPopularTracks.map((track, index) => <p>{index + 1}.{track.x}</p>)}
+                            {length >= 80 && <Text type="danger">Playlists containing 80 or more tracks might not render properly.</Text>}
+                        </Col>
+                    </Row>
                 </Col>
             )
         }
         else {
+            data.sort((t1, t2) => t2.y - t1.y)
             return (
                 <Col>
                     <Row>
                         <h3>Most Popular Tracks</h3>
                     </Row>
                     <Row>
-                        <Col style={{"textAlign": "start", "paddingRight": "20px"}}>
+                        <Col style={{ "textAlign": "start", "paddingRight": "20px" }}>
                             {data.map((track, index) => {
-                                if (index <= 4)
+                                if (index + 1 <= 5)
                                     return <p>{index + 1}.{track.x}</p>
                             })}
-                            <Link target="_blank" onClick={showDrawer}>
+                            <Link target="_blank" onClick={() => showDrawer(length)}>
                                 Click to view details
                             </Link>
-                            <Drawer title="Track popularity" open={open} onClose={onClose} placement="bottom" footer={`Mean Value = ${meanPopularity.toFixed(2)}`}>
-                                <PopularityStatisticVisualization data={data} width={300} height={300} domainPadding={15}/>
+                            <Drawer title="Track popularity" open={open} onClose={onClose} placement="bottom" footer={`Mean Value = ${meanPopularity.toFixed(2)}`} height={600}>
+                                <Text italic>Just {length} tracks? Is this a phase?</Text>
+                                <PopularityStatisticVisualization data={data.sort((t1, t2) => t1.y - t2.y)} width={400} height={600} domainPadding={15} fontSize={fontSize} />
                             </Drawer>
                         </Col>
-                        <Col style={{"textAlign": "start"}}>
+                        <Col style={{ "textAlign": "start" }}>
                             {data.map((track, index) => {
-                                if (index > 4)
+                                if (index + 1 > 5)
                                     return <p>{index + 1}.{track.x}</p>
                             })}
                         </Col>
