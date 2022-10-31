@@ -9,6 +9,12 @@ import (
 )
 
 func GetPlaylists(w http.ResponseWriter, r *http.Request) {
+	if (r.Method == "OPTIONS"){
+		fmt.Println("Received preflight")
+		w.Header().Set("Content-Type", "application/json")
+		w.Write([]byte("Allowed Preflight Request"))
+		return
+	}
 	w.Header().Set("Content-Type", "application/json")
 
 	var url string
